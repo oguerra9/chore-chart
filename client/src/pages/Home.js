@@ -9,6 +9,13 @@ import Calendar from './Calendar';
 import DateBar from '../components/DateBar';
 //import Nav from '../components/Nav';
 import NewChoreForm from '../components/NewChoreForm';
+import {
+    BrowserRouter,
+    Routes,
+    Route,
+    Link,
+    HashRouter,
+  } from "react-router-dom";
 
 // props: handlePageChange(pageName)
 export default function Home(props) {
@@ -35,6 +42,7 @@ export default function Home(props) {
                     first_name: 'Liv',
                     last_name: 'Guerra',
                     username: 'og123',
+                    display_name: 'liv',
                     color_code: '#2D4356'
                 },
                 {
@@ -42,18 +50,21 @@ export default function Home(props) {
                     first_name: 'Mia',
                     last_name: 'Guerra',
                     username: 'mg123',
+                    display_name: 'mia',
                     color_code: '#A76F6F'
                 },
                 {
                     index: 2,
-                    first_name: 'Chris',
+                    first_name: 'Christine',
                     last_name: 'Freddy',
                     username: 'cf123',
+                    display_name: 'chris',
                     color_code: '#435B66'
                 }
             ],
             chores: [
                 {
+                    id: 1234,
                     title: "Sweep Floors - ED",
                     start_date: 1690171200000,
                     end_date: 1690516800000,
@@ -64,6 +75,7 @@ export default function Home(props) {
                     time_inc: 604800000,
                 },
                 {
+                    id: 4321,
                     title: "Vacuum - noED",
                     start_date: 1689652800000,
                     end_date: '',
@@ -73,38 +85,41 @@ export default function Home(props) {
                     repeating: true,
                     time_inc: 604800000,
                 },
-            ],
-            shareId: 'abc123'
+            ]
         },
         {
-            id: '234',
+            id: '4321',
             title: 'Calendar #2',
             users: [
                 {
                     index: 0,
-                    first_name: 'Liv',
-                    last_name: 'Guerra',
-                    username: 'og123',
+                    first_name: 'Abby',
+                    last_name: 'Gale',
+                    username: 'ag123',
+                    display_name: 'ab',
                     color_code: '#2D4356'
                 },
                 {
                     index: 1,
-                    first_name: 'Mia',
-                    last_name: 'Guerra',
-                    username: 'mg123',
+                    first_name: 'Tiffany',
+                    last_name: 'Ye',
+                    username: 'ty123',
+                    display_name: 'tiff',
                     color_code: '#A76F6F'
                 },
                 {
                     index: 2,
-                    first_name: 'Chris',
-                    last_name: 'Freddy',
-                    username: 'cf123',
+                    first_name: 'Lena',
+                    last_name: 'Smith',
+                    username: 'ls123',
+                    display_name: 'lenny',
                     color_code: '#435B66'
                 }
             ],
             chores: [
                 {
-                    title: "Sweep Floors - ED",
+                    id: 1234,
+                    title: "Sweep Floors 2 - ED",
                     start_date: 1690171200000,
                     end_date: 1690516800000,
                     first_user_index: "1",
@@ -114,7 +129,8 @@ export default function Home(props) {
                     time_inc: 604800000,
                 },
                 {
-                    title: "Vacuum - noED",
+                    id: 4321,
+                    title: "Vacuum 2 - noED",
                     start_date: 1689652800000,
                     end_date: '',
                     first_user_index: "2",
@@ -123,8 +139,7 @@ export default function Home(props) {
                     repeating: true,
                     time_inc: 604800000,
                 },
-            ],
-            shareId: 'abc123'
+            ]
         }
     ];
 
@@ -133,7 +148,7 @@ export default function Home(props) {
         console.log(`redirecting to calendar with id ${event.target.name}`);
         localStorage.setItem('displayTS', (new Date().getTime()));
         localStorage.setItem('currCalendar', event.target.name);
-        window.location.pathname = `/calendar/${event.target.name}`;
+        //window.location.pathname = `/calendar/${event.target.name}`;
         //handlePageChange('calendar');
     };
 
@@ -158,9 +173,12 @@ export default function Home(props) {
             <div className='d-flex flex-wrap' style={{'height': '100%'}}>
                 {/* <Button onClick={combinedCalendar}>See all</Button> */}
                 {calendars.map(calendar => (
-                    <button onClick={directCalendar} name={calendar.id} key={calendar.id} id="calendarButton" className='col-2 m-2'>
-                        {calendar.title}
-                    </button>
+                    // <button onClick={directCalendar} name={calendar.id} key={calendar.id} id="calendarButton" className='col-2 m-2'>
+                    //     {calendar.title}
+                    // </button>
+                    <Link to={`/calendar/${calendar.id}`} key={calendar.id} className='col-2 m-2'>
+                        <Button onClick={directCalendar}  name={calendar.id} id="calendarButton">{calendar.title}</Button>
+                    </Link>
                 ))}
             </div>
         </div>

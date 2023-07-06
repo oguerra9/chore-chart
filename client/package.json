@@ -1,5 +1,6 @@
 {
   "name": "client",
+  "homepage": "https://oguerra9.github.io/chore-chart",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -8,6 +9,7 @@
     "@testing-library/user-event": "^13.5.0",
     "bootstrap": "^5.2.3",
     "dotenv": "^16.0.3",
+    "gh-pages": "^5.0.0",
     "react": "^17.0.2",
     "react-bootstrap": "^2.7.4",
     "react-color": "^2.19.3",
@@ -17,9 +19,11 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "jest",
+    "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
