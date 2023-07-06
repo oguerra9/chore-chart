@@ -8,68 +8,156 @@ import NewChoreForm from '../components/NewChoreForm';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Offcanvas from 'react-bootstrap/Offcanvas';
+import {
+    BrowserRouter,
+    Routes,
+    Route,
+    Link,
+    HashRouter,
+    useParams
+  } from "react-router-dom";
 
 // props: handlePageChange(pageName), calendarData
 export default function Calendar(props) {
     // can use Holidays by API-Ninja to add holidays etc to calendar for extra * pizazz *
     const [displayTS, setDisplayTS] = useState('');
+    let { id } = useParams();
+    console.log(`param id = ${id}`);
     const [displayView, setDisplayView] = useState('');
-    const [calendarData, setCalendarData] = useState({
-        id: '123',
-        title: 'Calendar #1',
-        users: [
-            {
-                index: 0,
-                first_name: 'Liv',
-                last_name: 'Guerra',
-                username: 'og123',
-                display_name: 'liv',
-                color_code: '#2D4356'
-            },
-            {
-                index: 1,
-                first_name: 'Mia',
-                last_name: 'Guerra',
-                username: 'mg123',
-                display_name: 'mia',
-                color_code: '#A76F6F'
-            },
-            {
-                index: 2,
-                first_name: 'Christine',
-                last_name: 'Freddy',
-                username: 'cf123',
-                display_name: 'chris',
-                color_code: '#435B66'
+    const [displayId, setDisplayId] = useState(useParams().id);
+    const [calendarArr, setCalendarArr] = useState([
+        {
+            id: '123',
+            title: 'Calendar #1',
+            users: [
+                {
+                    index: 0,
+                    first_name: 'Liv',
+                    last_name: 'Guerra',
+                    username: 'og123',
+                    display_name: 'liv',
+                    color_code: '#2D4356'
+                },
+                {
+                    index: 1,
+                    first_name: 'Mia',
+                    last_name: 'Guerra',
+                    username: 'mg123',
+                    display_name: 'mia',
+                    color_code: '#A76F6F'
+                },
+                {
+                    index: 2,
+                    first_name: 'Christine',
+                    last_name: 'Freddy',
+                    username: 'cf123',
+                    display_name: 'chris',
+                    color_code: '#435B66'
+                }
+            ],
+            chores: [
+                {
+                    id: 1234,
+                    title: "Sweep Floors - ED",
+                    start_date: 1690171200000,
+                    end_date: 1690516800000,
+                    first_user_index: "1",
+                    freq_frame: "week",
+                    freq_quantity: "1",
+                    repeating: true,
+                    time_inc: 604800000,
+                },
+                {
+                    id: 4321,
+                    title: "Vacuum - noED",
+                    start_date: 1689652800000,
+                    end_date: '',
+                    first_user_index: "2",
+                    freq_frame: "week",
+                    freq_quantity: "1",
+                    repeating: true,
+                    time_inc: 604800000,
+                },
+            ]
+        },
+        {
+            id: '4321',
+            title: 'Calendar #2',
+            users: [
+                {
+                    index: 0,
+                    first_name: 'Abby',
+                    last_name: 'Gale',
+                    username: 'ag123',
+                    display_name: 'ab',
+                    color_code: '#2D4356'
+                },
+                {
+                    index: 1,
+                    first_name: 'Tiffany',
+                    last_name: 'Ye',
+                    username: 'ty123',
+                    display_name: 'tiff',
+                    color_code: '#A76F6F'
+                },
+                {
+                    index: 2,
+                    first_name: 'Lena',
+                    last_name: 'Smith',
+                    username: 'ls123',
+                    display_name: 'lenny',
+                    color_code: '#435B66'
+                }
+            ],
+            chores: [
+                {
+                    id: 1234,
+                    title: "Sweep Floors 2 - ED",
+                    start_date: 1690171200000,
+                    end_date: 1690516800000,
+                    first_user_index: "1",
+                    freq_frame: "week",
+                    freq_quantity: "1",
+                    repeating: true,
+                    time_inc: 604800000,
+                },
+                {
+                    id: 4321,
+                    title: "Vacuum 2 - noED",
+                    start_date: 1689652800000,
+                    end_date: '',
+                    first_user_index: "2",
+                    freq_frame: "week",
+                    freq_quantity: "1",
+                    repeating: true,
+                    time_inc: 604800000,
+                },
+            ]
+        }
+    ]);
+
+    const getCalendarData = () => {
+        // will be replaced with call to db to retrieve data for calendar with displayId
+        console.log('calendar arr');
+        console.log(calendarArr);
+        console.log('display id');
+        console.log(displayId);
+        let retData = {};
+        for (let i = 0; i < calendarArr.length; i++) {
+            if (calendarArr[i].id === displayId) {
+                retData = calendarArr[i];
+                console.log('retData');
+                console.log(retData);
+                break;
             }
-        ],
-        chores: [
-            {
-                id: 1234,
-                title: "Sweep Floors - ED",
-                start_date: 1690171200000,
-                end_date: 1690516800000,
-                first_user_index: "1",
-                freq_frame: "week",
-                freq_quantity: "1",
-                repeating: true,
-                time_inc: 604800000,
-            },
-            {
-                id: 4321,
-                title: "Vacuum - noED",
-                start_date: 1689652800000,
-                end_date: '',
-                first_user_index: "2",
-                freq_frame: "week",
-                freq_quantity: "1",
-                repeating: true,
-                time_inc: 604800000,
-            },
-        ],
-        shareId: 'abc123'
-    });
-    const [displayId, setDisplayId] = useState('');
+        }
+        console.log('retData');
+        console.log(retData);
+        return retData;
+    };
+
+    const [calendarData, setCalendarData] = useState(getCalendarData);
+    
     const [calendarChores, setCalendarChores] = useState([]);
 
     const [showCalendarSettings, setShowCalendarSettings] = useState(false);
@@ -82,12 +170,10 @@ export default function Calendar(props) {
     const handleHideCalendarSettings = () => setShowCalendarSettings(false);
 
     useEffect(() => {
-        // if (props.loggedIn === false) {
-        //     window.location.pathname = '/login';
-        // }
 
-        let pathArr = window.location.pathname.split('/');
-        setDisplayId(pathArr[2]);
+        console.log(`displayId = ${displayId}`);
+        console.log(`calendarData`);
+        console.log(calendarData);
 
         if (localStorage.hasOwnProperty('displayTS')) {
             setDisplayTS(new Date(localStorage.getItem('displayTS')));
@@ -97,21 +183,32 @@ export default function Calendar(props) {
             setDisplayView(localStorage.getItem('setDisplayView'));
         }
 
-        //getCalendarData();
-        console.log('calendar data');
-        console.log(calendarData);
+        setCalendarData(getCalendarData());
+
+        // console.log('calendarData');
+        // console.log(calendarData);
+        // console.log(`calendarData === 'empty'`);
+        // console.log(`${calendarData} === ${'empty'}`);
+        // console.log(calendarData === 'empty');
+        // if (calendarData == 'empty') {
+        //     getCalendarData();
+            // console.log('data');
+            // console.log(data);
+            
+            // console.log('calendar data');
+            // console.log(calendarData);
+        // }
+        
         //console.log('calendarChores');
         //console.log(calendarChores);
     }, []);
+
+    
 
     const handleChangeData = (newCalendarData) => {
         setCalendarData(newCalendarData);
         handleHideCalendarSettings();
     };
-
-    const handleBack = () => {
-        window.location.pathname = '/home';
-    }
 
     return (
         <>
@@ -119,7 +216,7 @@ export default function Calendar(props) {
                 
                 {/* {renderTimeFrame()} */}
                 <div className='d-flex'>
-                    <Button onClick={handleBack} className="m-2">{'<'}</Button>
+                    <Link to="/home" className="m-2"><Button>{'<'}</Button></Link>
                     <h1 className='m-2'>{calendarData.title}</h1>
                     <Button onClick={handleShowChoreForm} className="col-2 m-2">Add New Chore</Button>
                     <Button onClick={handleShowCalendarSettings} className="col-2 m-2">Calendar Settings</Button>

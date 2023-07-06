@@ -5,7 +5,15 @@ import Calendar from './pages/Calendar';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Navi from './components/Navi';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+//import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Link,
+  HashRouter,
+} from "react-router-dom";
+
 import Button from 'react-bootstrap/Button';
 
 
@@ -62,7 +70,7 @@ export default function App() {
   const handleLogout = () => {
     localStorage.setItem('loggedIn', false);
     setLoggedIn('false');
-    window.location.pathname = '/login';
+    //window.location.pathname = '/login';
   }
 
   useEffect(() => {
@@ -73,34 +81,71 @@ export default function App() {
     console.log(loggedIn);
   }, [loggedIn]);
 
+  // return (
+  //   <Router>
+  //     <div>
+        // <div id="pageHeader" className='d-flex justify-content-between p-3'>
+        //   <h1>Chore Chart</h1>
+        //   {(loggedIn === 'true') ? (
+        //     <Button onClick={handleLogout}>Logout</Button>
+        //   ) : (<></>)}
+        // </div>
+  //     <Routes>
+  //       <Route 
+  //         path="/" 
+  //         element={<Login loggedIn={loggedIn} handleLogin={handleLogin} />}
+  //       />
+  //       <Route 
+  //         path="/login" 
+  //         element={<Login loggedIn={loggedIn} handleLogin={handleLogin} />}
+  //       />
+  //       <Route 
+  //         path="/home" 
+  //         element={<Home loggedIn={loggedIn} />}
+  //       />
+  //       <Route 
+  //         path="/calendar/:id" 
+  //         element={<Calendar loggedIn={loggedIn} />}
+  //       />
+  //     </Routes>
+  //     </div>
+  //   </Router>
+  // );
   return (
-    <Router>
-      <div>
-        <div id="pageHeader" className='d-flex justify-content-between p-3'>
-          <h1>Chore Chart</h1>
-          {(loggedIn === 'true') ? (
-            <Button onClick={handleLogout}>Logout</Button>
-          ) : (<></>)}
+    <HashRouter basename="/">
+      {/* <nav>
+        <div className='d-flex'>
+          <div className='m-2'>
+            <Link to="/welcome">Welcome</Link>
+          </div>
+          <div className='m-2'>
+            <Link to="/projects">Projects</Link>
+          </div>
+          <div className='m-2'>
+            <Link to="/resume">Resume</Link>
+          </div>
         </div>
-      <Routes>
-        <Route 
-          path="/" 
-          element={<Login loggedIn={loggedIn} handleLogin={handleLogin} />}
-        />
-        <Route 
-          path="/login" 
-          element={<Login loggedIn={loggedIn} handleLogin={handleLogin} />}
-        />
-        <Route 
-          path="/home" 
-          element={<Home loggedIn={loggedIn} />}
-        />
-        <Route 
-          path="/calendar/:id" 
-          element={<Calendar loggedIn={loggedIn} />}
-        />
-      </Routes>
+      </nav> */}
+      <div id="pageHeader" className='d-flex justify-content-between p-3'>
+        <h1>Chore Chart</h1>
+        {(loggedIn === 'true') ? (
+          <Link to="/login"><Button onClick={handleLogout}>Logout</Button></Link>
+          
+        ) : (<></>)}
       </div>
-    </Router>
-  )
+
+      <Routes>
+        <Route path="/login" element={<Login handleLogin={handleLogin} />}/>
+        {loggedIn === 'true' ? (
+          <>
+          <Route path="/home" element={<Home />}/>
+          <Route path="/calendar/:id" element={<Calendar />} />
+          <Route path="/" element={<Home />} />
+          </>
+        ) : (
+          <Route path="/" element={<Login handleLogin={handleLogin} />} />
+        )}
+      </Routes>
+    </HashRouter>
+);
 }

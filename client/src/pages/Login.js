@@ -42,7 +42,7 @@ export default function Login(props) {
         props.handleLogin();
         //props.handlePageChange('Home');
         localStorage.setItem('loggedIn', true);
-        window.location.pathname = '/home';
+        //window.location.pathname = '/home';
     };
 
     const submitLogin = (event) => {
@@ -57,7 +57,7 @@ export default function Login(props) {
         localStorage.setItem('displayTS', currTS);
         props.handleLogin();
         localStorage.setItem('loggedIn', true);
-        window.location.pathname = '/home'
+        //window.location.pathname = '/home'
         //props.handlePageChange('Home');
     };
 
