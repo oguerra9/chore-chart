@@ -185,4 +185,12 @@ Date.prototype.incrementTime = function(start_date, timeSpan, timeInc) {
     return startDay;
 }
 
+Date.prototype.toDateBoxString = function() {
+    let fullString = this.toISOString();
+    console.log(`full string = ${fullString}`);
+    let dbString = fullString.substring(0,10);
+    console.log(`dbString = ${dbString}`);
+    return dbString;
+}
+
 module.exports = Date;

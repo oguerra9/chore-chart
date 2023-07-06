@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
-// props = calendarUsers
-export default function NewChoreForm(props) {
+import Date from '../utils/dateUtils';
+
+// props = calendarUsers, choreData
+export default function EditChoreForm(props) {
     // will appear in modal with the following input areas:
     //  (string) title
     //  (checkbox) repeating
@@ -22,9 +24,16 @@ export default function NewChoreForm(props) {
 
     // console.log(props.calendarUsers);
 
-    const [repeating, setRepeating] = useState(false);
+    const [repeating, setRepeating] = useState(props.choreData.repeating);
 
-    const [newChoreData, setNewChoreData] = useState({
+    const [newChoreData, setNewChoreData] = useState(props.choreData);
+
+    const handleChange = (event) => {
+        const {name, value} = event.target;
+        setNewChoreData({...newChoreData, [name]: value});
+    };
+
+    /*
         title: '',
         first_user_index: '',
         start_date: '',
@@ -32,13 +41,8 @@ export default function NewChoreForm(props) {
         time_inc: '',
         repeating: '',
         freq_frame: '',
-        freq_quantity: ''    // quantity refers to the number of [frequency] between each instance of the 
-    });
-
-    const handleChange = (event) => {
-        const {name, value} = event.target;
-        setNewChoreData({...newChoreData, [name]: value});
-    };
+        freq_quantity: ''   
+    */
 
     const toggleRepeating = () => {
         if (repeating === true) {
@@ -60,7 +64,8 @@ export default function NewChoreForm(props) {
             let endTS = new Date(newChoreData.end_date).getTimelessStamp();
             newChoreData.end_date = endTS;
         } else {
-            newChoreData.end_date = startTS;
+            //newChoreData.end_date = startTS;
+            setNewChoreData({...newChoreData, time_inc: '', freq_frame: '', freq_quantity: '', end_date: startTS});
         }
         
         
@@ -87,7 +92,7 @@ export default function NewChoreForm(props) {
                     type="date"
                     name="start_date"
                     placeholder="Date"
-                    value={newChoreData.start_date}
+                    value={new Date(newChoreData.start_date).toDateBoxString()}
                     onChange={handleChange}
                 />
             </Form.Group>
@@ -111,6 +116,7 @@ export default function NewChoreForm(props) {
                     name="repeating"
                     label="Repeating"
                     onClick={toggleRepeating}
+                    checked={repeating}
                 />
             </Form.Group>
             {repeating ? (
@@ -159,13 +165,23 @@ export default function NewChoreForm(props) {
                     </Form.Group> */}
                     <Form.Group className="mb-3" controlId="eventDate">
                         <Form.Label>End Date</Form.Label>
-                        <Form.Control
-                            type="date"
-                            name="end_date"
-                            placeholder="Date"
-                            value={newChoreData.end_date}
-                            onChange={handleChange}
-                        />
+                        {newChoreData.end_date === '' ? (
+                            <Form.Control
+                                type="date"
+                                name="end_date"
+                                placeholder="Date"
+                                value={newChoreData.end_date}
+                                onChange={handleChange}
+                            />
+                        ) : (
+                            <Form.Control
+                                type="date"
+                                name="end_date"
+                                placeholder="Date"
+                                value={new Date(newChoreData.end_date).toDateBoxString()}
+                                onChange={handleChange}
+                            />
+                        )}
                     </Form.Group>
 
                     

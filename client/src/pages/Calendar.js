@@ -45,6 +45,7 @@ export default function Calendar(props) {
         ],
         chores: [
             {
+                id: 1234,
                 title: "Sweep Floors - ED",
                 start_date: 1690171200000,
                 end_date: 1690516800000,
@@ -55,6 +56,7 @@ export default function Calendar(props) {
                 time_inc: 604800000,
             },
             {
+                id: 4321,
                 title: "Vacuum - noED",
                 start_date: 1689652800000,
                 end_date: '',

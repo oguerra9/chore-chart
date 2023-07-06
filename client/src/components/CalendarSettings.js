@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
+
+import EditUserForm from './EditUserForm';
+import EditChoreForm from './EditChoreForm';
 
 // props = calendarData, handleChangeData
 export default function CalendarSettings(props) {
@@ -9,7 +13,17 @@ export default function CalendarSettings(props) {
     */
 
     const [formData, setFormData] = useState(props.calendarData);
-    const [editData, setEditData] = useState({});
+    const [editUserData, setEditUserData] = useState({});
+    const [editChoreData, setEditChoreData] = useState({});
+
+    const [showEditUser, setShowEditUser] = useState(false);
+    const [showEditChore, setShowEditChore] = useState(false);
+
+    const handleShowEditUser = () => setShowEditUser(true);
+    const handleHideEditUser = () => setShowEditUser(false);
+
+    const handleShowEditChore = () => setShowEditChore(true);
+    const handleHideEditChore = () => setShowEditChore(false);
 
     const handleChange = (event) => {
         const {name, value} = event.target;
@@ -21,9 +35,21 @@ export default function CalendarSettings(props) {
     };
 
     const editUser = (event) => {
-        let userData = event.target.name;
+        let userData = JSON.parse(event.target.name);
+        setEditUserData(userData);
+        console.log('edit user');
+        console.log(userData);
+        handleShowEditUser();
 
-    }
+    };
+
+    const editChore = (event) => {
+        let choreData = JSON.parse(event.target.name);
+        setEditChoreData(choreData);
+        console.log('edit chore');
+        console.log(choreData);
+        handleShowEditChore();
+    };
 
 
     // option to change name of calendar
@@ -64,7 +90,10 @@ export default function CalendarSettings(props) {
                 <h4>Chores</h4>
                 <div>
                     {formData.chores.map((chore) => (
-                        <div key={chore.title}>{chore.title}</div>
+                        <div className='d-flex mb-2' key={chore.id}>
+                            <div>{chore.title}</div>
+                            <Button onClick={editChore} name={JSON.stringify(chore)} id="editButton">🔧</Button>
+                        </div>
                     ))}
                 </div>
             </div>
@@ -75,10 +104,23 @@ export default function CalendarSettings(props) {
             <Button onClick={handleSubmit}>Save Changes</Button>
         </Form>
 
-        {/* <Modal>
-            <Modal.Header>Edit User</Modal.Header>
+        <Modal show={showEditUser} onHide={handleHideEditUser}>
+            <Modal.Header closeButton>
+                Edit User
+            </Modal.Header>
+            <Modal.Body>
+                <EditUserForm userData={editUserData} />
+            </Modal.Body>
+        </Modal>
 
-        </Modal> */}
+        <Modal show={showEditChore} onHide={handleHideEditChore}>
+            <Modal.Header closeButton>
+                Edit User
+            </Modal.Header>
+            <Modal.Body>
+                <EditChoreForm choreData={editChoreData} calendarUsers={formData.users} />
+            </Modal.Body>
+        </Modal>
         </>
     );
 }
