@@ -6,6 +6,7 @@ import Button from 'react-bootstrap/Button';
 
 // props: handlePageChange(pageName), handleLogin(bool)
 export default function Login(props) {
+
     const [signupData, setSignupData] = useState({
         username: '',
         password: '',
@@ -29,29 +30,35 @@ export default function Login(props) {
     };
 
     const submitSignup = (event) => {
+        event.preventDefault();
         console.log('signing up new user...');
         console.log('Data:');
         console.log(signupData);
         // functionality added to validate data and create new user
         // but for now, we'll just redirect so we can show how the rest of the app works
         let currTime = new Date();
-        let currTS = currTime.getTimelessStamp();
+        let currTS = currTime.getTime();
         localStorage.setItem('displayTS', currTS);
-        props.handleLogin(true);
-        props.handlePageChange('Home');
+        props.handleLogin();
+        //props.handlePageChange('Home');
+        localStorage.setItem('loggedIn', true);
+        window.location.pathname = '/home';
     };
 
     const submitLogin = (event) => {
+        event.preventDefault();
         console.log('Logging in...');
         console.log('Data:');
         console.log(loginData);
         // functionality added to actually log user in and validate username and password match
         // but for now, we'll just redirect so we can show how the rest of the app works
         let currTime = new Date();
-        let currTS = currTime.getTimelessStamp();
+        let currTS = currTime.getTime();
         localStorage.setItem('displayTS', currTS);
-        props.handleLogin(true);
-        props.handlePageChange('Home');
+        props.handleLogin();
+        localStorage.setItem('loggedIn', true);
+        window.location.pathname = '/home'
+        //props.handlePageChange('Home');
     };
 
     const [showSignup, setShowSignup] = useState(false);
@@ -67,9 +74,9 @@ export default function Login(props) {
     // on successful login, initialize localStorage.displayTS at current timeless stamp
     return (
         <>
-            <div>
-                <Button onClick={handleShowSignup}>Sign Up</Button>
-                <Button onClick={handleShowLogin}>Login</Button>
+            <div className='p2'>
+                <Button onClick={handleShowSignup} className='m-1'>Sign Up</Button>
+                <Button onClick={handleShowLogin} className='m2'>Login</Button>
             </div>
 
             <Modal show={showSignup} onHide={handleHideSignup}>

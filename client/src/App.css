@@ -36,3 +36,24 @@
     transform: rotate(360deg);
   }
 }
+
+#pageHeader {
+  background-color: rgb(171, 255, 255);
+}
+
+#emptyDateBox {
+  height: 100%;
+  background-color: rgb(179, 179, 179);
+}
+
+#calendarButton {
+  height: 20%;
+}
+
+#editButton {
+  padding: 0px 1px;
+  font-size: 12px;
+
+  display: flex;
+  align-self: end;
+}

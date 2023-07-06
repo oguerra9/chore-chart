@@ -171,5 +171,18 @@ Date.prototype.getDisplayMonth = function() {
     return (this.getMonth() + 1);
 };
 
+Date.prototype.incrementTime = function(start_date, timeSpan, timeInc) {
+    let startDay = new Date(new Date(start_date).getTimelessStamp());
+
+    if (timeSpan === 'month') {
+        startDay.setFullYear(this.getFullYear(), this.getMonth() + timeInc);
+    } else if (timeSpan === 'week') {
+        startDay.setTime(startDay.getTime() + (timeInc * 7 * ms_in_one_day));
+    } else if (timeSpan === 'day') {
+        startDay.setTime(startDay.getTime() + (timeInc * ms_in_one_day));
+    }
+
+    return startDay;
+}
 
 module.exports = Date;
