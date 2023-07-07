@@ -186,10 +186,14 @@ Date.prototype.incrementTime = function(start_date, timeSpan, timeInc) {
 }
 
 Date.prototype.toDateBoxString = function() {
-    let fullString = this.toISOString();
-    console.log(`full string = ${fullString}`);
-    let dbString = fullString.substring(0,10);
-    console.log(`dbString = ${dbString}`);
+    let dbString = '';
+    try {
+        let fullString = this.toISOString();
+        dbString = fullString.substring(0,10);
+    } catch (err) {
+        dbString = '';
+    }
+    
     return dbString;
 }
 

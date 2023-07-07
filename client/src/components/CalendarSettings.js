@@ -6,6 +6,28 @@ import Modal from 'react-bootstrap/Modal';
 import EditUserForm from './EditUserForm';
 import EditChoreForm from './EditChoreForm';
 
+import DS from '../services/dataService';
+
+/* CURRENT DATASERVICE METHODS
+  ADD METHODS
+    addUser({ string username, string password})
+    addCalendar({ string title, string display_name, string color_code, string user_id })
+    joinCalendar({ string share_id, string user_id, string display_name, string color_code })
+    addChore({ string calendar_id, string title, string description, string start_date, string end_date, int first_user_idx, int freq, string time_frame, int time_inc, bool does_repeat })
+  GET METHODS
+    getUserByUsername( string username )
+    getUserCalendars( string userId )
+    getCalendarData( string calendarId )
+  EDIT METHODS
+    editCalendar({ string calendarId, string title })
+    editUserDisplay({ string userId, string display_name, string color_code }) ** only userId is required
+    editChore({ string choreId, string description, string start_data, string time_frame })  ** only choreId is required
+  DELETE METHODS
+    deleteCalendarUser({ string user_id, string calendar_id })
+    deleteChore( string choreId )
+    deleteCalendar( string calendar_id )
+*/
+
 // props = calendarData, handleChangeData
 export default function CalendarSettings(props) {
     /*
@@ -13,6 +35,8 @@ export default function CalendarSettings(props) {
     */
 
     const [formData, setFormData] = useState(props.calendarData);
+    console.log(props.calendarData);
+    const [userCalId, setUserCalId] = useState(localStorage.getItem('userCalId'));
     const [editUserData, setEditUserData] = useState({});
     const [editChoreData, setEditChoreData] = useState({});
 
@@ -30,8 +54,18 @@ export default function CalendarSettings(props) {
         setFormData({...formData, [name]: value});
     };
 
-    const handleSubmit = () => {
-        props.handleChangeData(formData);
+    const handleSubmit = async () => {
+        console.log('updated calendar data');
+        console.log(formData);
+        //editCalendar({ string calendarId, string title })
+        await (DS.editCalendar({calendar_id: (formData['calendar_id']).toString(), title: (formData.title)})).then((response) => {
+            console.log(`updated calendar`);
+            console.log(response);
+        });
+
+        localStorage.setItem('currCalendarTitle', formData.title);
+
+        props.handleChangeData();
     };
 
     const editUser = (event) => {
@@ -79,10 +113,15 @@ export default function CalendarSettings(props) {
                 <div>
                     {formData.users.map((user) => (
                         <div className='d-flex mb-2' key={user.id}>
+                            {console.log(user)}
                             <div style={{'color': user.color_code}} className="m-2 mb-0 d-flex align-self-center" key={user}>{user.display_name}</div>
-                            <Button onClick={editUser} name={JSON.stringify(user)} id="editButton">🔧</Button>
+                            {userCalId == user.cl_usr_id ? (
+                                <Button onClick={editUser} name={JSON.stringify(user)} id="editButton">🔧</Button>
+                            ) : (
+                                <></>
+                            )}
+                            {/* <Button onClick={editUser} name={JSON.stringify(user)} id="editButton">🔧</Button> */}
                         </div>
-                        
                     ))}
                 </div>
             </div>
@@ -90,8 +129,8 @@ export default function CalendarSettings(props) {
                 <h4>Chores</h4>
                 <div>
                     {formData.chores.map((chore) => (
-                        <div className='d-flex mb-2' key={chore.id}>
-                            <div className="m-2 mb-0 d-flex align-self-center">{chore.title}</div>
+                        <div className='d-flex mb-2' key={chore.chore_id}>
+                            <div className="m-2 mb-0 d-flex align-self-center">{chore.chore_title}</div>
                             <Button onClick={editChore} name={JSON.stringify(chore)} id="editButton">🔧</Button>
                         </div>
                     ))}
@@ -115,7 +154,7 @@ export default function CalendarSettings(props) {
 
         <Modal show={showEditChore} onHide={handleHideEditChore}>
             <Modal.Header closeButton>
-                Edit User
+                Edit Chore
             </Modal.Header>
             <Modal.Body>
                 <EditChoreForm choreData={editChoreData} calendarUsers={formData.users} />

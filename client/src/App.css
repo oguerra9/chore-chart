@@ -31,6 +31,9 @@
   --buttons: #b57b61;
   --brightAccent: #E55807;
   --lightAccent: #F2EDD7;
+  --pageBack: #F2EDD7;
+  --pageBorder: #d16146;
+  /*--pageBorder: #7d2620; */
   --unavailable: #d2cfb5;
   --darkAccent: #3a1c18;
   /* --lightAccent: #ECF8F9; */
@@ -163,22 +166,24 @@ Form  Button {
 }
 
 #calendarPageContainer {
-  border: 3px solid red;
   margin: 2% 5%;
   margin-bottom: 0;
   border-radius: 10px;
   padding: 2%;
-  background-color: var(--lightAccent);
+  background-color: var(--pageBack);
+  border: 3px solid var(--pageBorder);
 
 }
 
 #homePageContainer {
-  border: 3px solid orange;
   margin: 2% 5%;
   margin-bottom: 0;
   border-radius: 10px;
-  padding: 2%;
-  background-color: var(--lightAccent);
+  padding: 1.5%;
+  background-color: var(--pageBack);
+  border: 3px solid var(--pageBorder); 
+  /* box-shadow: horizontal vertical blur spread-radius color inset */
+  /*box-shadow: 3px 3px 25px -10px var(--pageBorder) inset, -3px -3px 25px -10px var(--pageBorder) inset;*/
 }
 
 #loginPageContainer {
@@ -188,9 +193,10 @@ Form  Button {
   margin: 15%;
   margin-top: 5%;
   margin-bottom: 10%;
-  background-color: var(--lightAccent);
   display: flex;
   flex-direction: column;
+  background-color: var(--pageBack);
+  border: 3px solid var(--pageBorder);
 }
 
 #pageTitleText {
@@ -217,4 +223,37 @@ Form  Button {
   align-self: center;
   justify-content: center;
   color: var(--lightAccent);
+}
+
+#monthContainer {
+  border: 1px solid var(--darkAccent);
+  border-radius: 10px;
+  display: flex;
+}
+
+#weekDayTitles {
+  border: 1px solid red;
+  column-count: 7;
+  display: flex;
+  width: 100%;
+  justify-content: space-around;
+}
+
+#dayTitle {
+  width: 100%;
+}
+
+#datesContainer {
+  width: 100%;
+  border: 1px solid pink;
+  column-count: 7;
+  display: flex;
+  flex-wrap: wrap;
+  /* <div key={index} style={{'width':'14%', 'height': '150px', 'border': '1px solid black'}}> */
+}
+
+#dayBox { 
+  height: 150px;
+  /* border: 1px solid green; */
+  width: 14.285714285714285714%;
 }
