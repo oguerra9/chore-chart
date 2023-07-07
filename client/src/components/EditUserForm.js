@@ -41,7 +41,7 @@ export default function EditUserForm(props) {
                     color={sketchPickerColor}
                 /> 
             </Form.Group>
-            <Button onClick={handleSaveUser}>Save</Button>
+            <Button id="appButton" onClick={handleSaveUser}>Save</Button>
         </Form>
     )
 }

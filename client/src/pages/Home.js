@@ -9,13 +9,8 @@ import Calendar from './Calendar';
 import DateBar from '../components/DateBar';
 //import Nav from '../components/Nav';
 import NewChoreForm from '../components/NewChoreForm';
-import {
-    BrowserRouter,
-    Routes,
-    Route,
-    Link,
-    HashRouter,
-  } from "react-router-dom";
+import { Link } from "react-router-dom";
+  import DS from '../services/dataService';
 
 // props: handlePageChange(pageName)
 export default function Home(props) {
@@ -163,20 +158,17 @@ export default function Home(props) {
 
     return (
         <>
-        <div className='p-2' style={{'height': '100vh'}}>
-            <div>
-                <h1>My Calendars</h1>
+        <div className='p-2' style={{'height': '100vh'}} id="homePageContainer">
+            <div className='d-flex'>
+                <div id="pageTitleText" style={{'marginRight':'auto'}}>My Calendars</div>
                 <Button onClick={handleShowNewCalendar} className="col-2 m-2">Create New Calendar</Button>
                 <Button onClick={handleShowJoinCalendar} className="col-2 m-2">Join an Existing Calendar</Button>
             </div>
             
-            <div className='d-flex flex-wrap' style={{'height': '100%'}}>
+            <div className='d-flex flex-wrap'>
                 {/* <Button onClick={combinedCalendar}>See all</Button> */}
                 {calendars.map(calendar => (
-                    // <button onClick={directCalendar} name={calendar.id} key={calendar.id} id="calendarButton" className='col-2 m-2'>
-                    //     {calendar.title}
-                    // </button>
-                    <Link to={`/calendar/${calendar.id}`} key={calendar.id} className='col-2 m-2'>
+                    <Link to={`/calendar/${calendar.id}`} key={calendar.id} className='col-2 m-2 d-flex flex-column'>
                         <Button onClick={directCalendar}  name={calendar.id} id="calendarButton">{calendar.title}</Button>
                     </Link>
                 ))}
@@ -233,6 +225,19 @@ function NewCalendarForm() {
         console.log(sketchPickerColor);
         // add functionality to call addCalendar to add calendar to db with the calendarData and get calendar id in return
         // also add calendar's id to current user's user.calendars array of calendar ids
+        /*  CALENDAR DATA
+            {
+                title: 'calendar title'
+            }
+        */
+       let calData = {
+        title: newCalendarData.title
+       };
+
+        (DS.addCalendar(calData)).then((response) => {
+            console.log('adding calendar...');
+            console.log(response);
+        });
         setShareId('calendarId');
         console.log('creating new calendar...');
         console.log(newCalendarData);
@@ -248,7 +253,7 @@ function NewCalendarForm() {
                     <p>Share this id with other users so they can join this calendar</p>
                 </div>
             ) : (
-                <Form style={{'color':sketchPickerColor}}>
+                <Form style={{'color':sketchPickerColor}} id="appForm">
                     <Form.Group>
                         <Form.Label>Title</Form.Label>
                         <Form.Control 
@@ -315,7 +320,7 @@ function JoinCalendarForm() {
     };
 
     return (
-        <Form style={{'color': sketchPickerColor}}>
+        <Form style={{'color': sketchPickerColor}} id="appForm">
             <Form.Group>
                 <Form.Label>Calendar ID</Form.Label>
                 <Form.Control 

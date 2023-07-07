@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import DS from '../services/dataService';
 
 // props = calendarUsers
 export default function NewChoreForm(props) {
@@ -23,9 +24,12 @@ export default function NewChoreForm(props) {
     // console.log(props.calendarUsers);
 
     const [repeating, setRepeating] = useState(false);
+    const [choreIcon, setChoreIcon] = useState('');
+    const iconOptions = ['🪠','🚽','🧻','🪣','🚿','🛁','🧼','🫧','🧽','🧴','🧹','🧺','💧','💦','☢️','⚠️','♻️','🗑️','🚻','🪥'];
 
     const [newChoreData, setNewChoreData] = useState({
         title: '',
+        description: '',
         first_user_index: '',
         start_date: '',
         end_date: '',
@@ -63,6 +67,7 @@ export default function NewChoreForm(props) {
             newChoreData.end_date = startTS;
         }
         
+        newChoreData.title = `${newChoreData.title} ${choreIcon}`;
         
         const ms_in_one_day = 86400000;
         if (newChoreData.freq_frame === 'week') {
@@ -73,38 +78,107 @@ export default function NewChoreForm(props) {
 
         console.log('chore form submitted');
         console.log(newChoreData);
+        /*  CHORE DATA
+            {
+                title: 'chore title',
+                description: 'chore description',
+                start_date: '2023/07/06',
+                end_date: '2023/08/06',
+                first_user_idx: 1,
+                freq: 2,
+                time_inc: 1,
+                does_repeat: true
+            }
+        */
+    //    let choreData = {
+    //     title: newChoreData.title,
+    //     description: newChoreData.description,
+    //     // start_date: newChoreData.start_date,
+    //     // end_date: newChoreData.end_date,
+    //     start_date: '2023/07/11',
+    //     end_date: '2023/08/12',
+    //     first_user_idx: newChoreData.first_user_index,
+    //     freq: newChoreData.freq_quantity,
+    //     // freq_frame: newChoreData.freq_frame,
+    //     // freq_quantity: newChoreData.freq_quantity,
+    //     time_inc: newChoreData.time_inc,
+    //     does_repeat: newChoreData.repeating
+    //    };
+        let choreData =  {
+            title: 'chore title',
+            description: 'chore description',
+            start_date: '2023/07/06',
+            end_date: '2023/08/06',
+            first_user_idx: 1,
+            freq: 2,
+            time_inc: 1,
+            does_repeat: true
+        };
+        (DS.addChore(choreData)).then((response) => {
+            console.log('adding chore...');
+            console.log(response);
+        });
     };
 
     return (
-        <Form>
+        <Form id="appForm">
+            <div className='d-flex justify-content-between'>
+                <Form.Group style={{'width': '45%'}}>
+                    <Form.Label>Title</Form.Label>
+                    <Form.Control type="text" name="title" value={newChoreData.title} onChange={handleChange} />
+                </Form.Group>
+                <div style={{'width':'45%'}}>
+                    <Form.Group
+                        className="d-flex flex-column"
+                        value={choreIcon}
+                        onChange={(e) => {setChoreIcon(e.target.value)}}
+                    >
+                        <Form.Label>Icon</Form.Label>
+                        <Form.Select>
+                            <option disabled> </option>
+                            {(iconOptions).map((icon) => (
+                                <option value={icon} style={{'fontSize':'20px'}}>{icon}</option>
+                            ))}
+                        </Form.Select>
+                    </Form.Group>
+                </div>
+            </div>
+            <div className='d-flex justify-content-between'>
+                <Form.Group controlId="eventDate" style={{'width': '45%'}}>
+                    <Form.Label>Date</Form.Label>
+                    <Form.Control
+                        type="date"
+                        name="start_date"
+                        placeholder="Date"
+                        value={newChoreData.start_date}
+                        onChange={handleChange}
+                    />
+                </Form.Group>
+                <Form.Group
+                    name="first_user_index"
+                    style={{'width': '45%'}}
+                    value={newChoreData.first_user_index}
+                    placeholder="User"
+                    onChange={(e) => {setNewChoreData({ ...newChoreData, first_user_index: e.target.value })}}
+                >
+                    <Form.Label>Assign first user:</Form.Label>
+                    <Form.Select>
+                        <option>User</option>
+                        {(props.calendarUsers).map((user) => (
+                            <option value={user.index}>{user.first_name}</option>
+                        ))}
+                    </Form.Select>
+                </Form.Group>
+            </div>
+
+            
+            
             <Form.Group>
-                <Form.Label>Title</Form.Label>
-                <Form.Control type="text" name="title" value={newChoreData.title} onChange={handleChange} />
+                <Form.Label>Description</Form.Label>
+                <Form.Control type="text" name="description" value={newChoreData.description} onChange={handleChange} />
             </Form.Group>
-            <Form.Group className="mb-3" controlId="eventDate">
-                <Form.Label>Date</Form.Label>
-                <Form.Control
-                    type="date"
-                    name="start_date"
-                    placeholder="Date"
-                    value={newChoreData.start_date}
-                    onChange={handleChange}
-                />
-            </Form.Group>
-            <Form.Group
-                name="first_user_index"
-                value={newChoreData.first_user_index}
-                placeholder="User"
-                onChange={(e) => {setNewChoreData({ ...newChoreData, first_user_index: e.target.value })}}
-            >
-                <Form.Label>Assign first user:</Form.Label>
-                <Form.Select>
-                    <option>User</option>
-                    {(props.calendarUsers).map((user) => (
-                        <option value={user.index}>{user.first_name}</option>
-                    ))}
-                </Form.Select>
-            </Form.Group>
+            
+            
             <Form.Group>
                 <Form.Check 
                     type="switch"
@@ -117,7 +191,7 @@ export default function NewChoreForm(props) {
                 <>
                 <Form.Group>
                     <Form.Label>Repeat every</Form.Label>
-                    <div className='d-flex justify-content-center'>
+                    <div className='d-flex justify-content-between'>
                     <Form.Control 
                         type="text"
                         name="freq_quantity"
@@ -157,7 +231,7 @@ export default function NewChoreForm(props) {
                             />
                         ))}
                     </Form.Group> */}
-                    <Form.Group className="mb-3" controlId="eventDate">
+                    <Form.Group className="mb-3" controlId="eventDate" style={{'width':'45%'}}>
                         <Form.Label>End Date</Form.Label>
                         <Form.Control
                             type="date"
@@ -173,7 +247,7 @@ export default function NewChoreForm(props) {
             ) : (
                 <></>
             )}
-            <Button onClick={submitChoreForm}>Add Chore</Button>
+            <Button id="appButton" onClick={submitChoreForm}>Add Chore</Button>
         </Form>
     );
 }

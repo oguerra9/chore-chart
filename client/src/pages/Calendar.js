@@ -209,17 +209,15 @@ export default function Calendar(props) {
         setCalendarData(newCalendarData);
         handleHideCalendarSettings();
     };
-
+    // ◀️⬅️🔙
     return (
         <>
-            <div className='p-2'>
-                
-                {/* {renderTimeFrame()} */}
+            <div className='p-2' id="calendarPageContainer">
                 <div className='d-flex'>
-                    <Link to="/home" className="m-2"><Button>{'<'}</Button></Link>
-                    <h1 className='m-2'>{calendarData.title}</h1>
-                    <Button onClick={handleShowChoreForm} className="col-2 m-2">Add New Chore</Button>
-                    <Button onClick={handleShowCalendarSettings} className="col-2 m-2">Calendar Settings</Button>
+                    <Link to="/home" className="m-2"><Button id='backButton'>{'<'}</Button></Link>
+                    <div className="m-2" style={{'marginRight': 'auto'}} id="headText">{calendarData.title}</div>
+                    <Button onClick={handleShowChoreForm} id="newChoreButton" className="col-2">Add New Chore</Button>
+                    <Button onClick={handleShowCalendarSettings} className="m-2" id="settingsButton">⚙️</Button>
                 </div>
                 
                 <Month scheduledChores={calendarData.chores} userArr={calendarData.users} />
