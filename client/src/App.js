@@ -112,6 +112,9 @@ export default function App() {
   //   </Router>
   // );
   return (
+    <div id="fullAppContainer">
+
+    
     <HashRouter basename="/">
       {/* <nav>
         <div className='d-flex'>
@@ -129,7 +132,7 @@ export default function App() {
       <div id="pageHeader" className='d-flex justify-content-between p-3'>
         <h1>Chore Chart</h1>
         {(loggedIn === 'true') ? (
-          <Link to="/login"><Button onClick={handleLogout}>Logout</Button></Link>
+          <Link to="/"><Button onClick={handleLogout}>Logout</Button></Link>
           
         ) : (<></>)}
       </div>
@@ -147,5 +150,6 @@ export default function App() {
         )}
       </Routes>
     </HashRouter>
+    </div>
 );
 }

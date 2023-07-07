@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button';
 
 export default function LoginForm(props) {
     return (
-        <Form>
+        <Form id="appForm">
             <Form.Group className="mb-3" controlId="username">
                 <Form.Label>Username</Form.Label>
                 <Form.Control type="text" name="username" onChange={props.handleChange} value={props.loginData.username} />
@@ -13,7 +13,7 @@ export default function LoginForm(props) {
                 <Form.Label>Password</Form.Label>
                 <Form.Control type="text" name="password" onChange={props.handleChange} value={props.loginData.password} />
             </Form.Group>
-            <Button onClick={props.submitLogin}>Login</Button>
+            <Button id="appButton" onClick={props.submitLogin}>Login</Button>
         </Form>
     );
 }

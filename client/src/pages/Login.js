@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
-import LoginForm from '../components/LoginForm';
-import SignupForm from '../components/SignupForm';
+//import LoginForm from '../components/LoginForm';
+//import SignupForm from '../components/SignupForm';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import DS from '../services/dataService';
+
 
 // props: handlePageChange(pageName), handleLogin(bool)
 export default function Login(props) {
@@ -34,15 +37,25 @@ export default function Login(props) {
         console.log('signing up new user...');
         console.log('Data:');
         console.log(signupData);
+        let userData = {
+            username: signupData.username,
+            password: signupData.password,
+            name: `${signupData.first_name} ${signupData.last_name}`
+        };
         // functionality added to validate data and create new user
         // but for now, we'll just redirect so we can show how the rest of the app works
+        // (DS.addUser(userData)).then((response) => {
+        //     console.log('adding user...');
+        //     console.log(response);
+        // });
+        handleHideSignup();
         let currTime = new Date();
         let currTS = currTime.getTime();
         localStorage.setItem('displayTS', currTS);
         props.handleLogin();
         //props.handlePageChange('Home');
         localStorage.setItem('loggedIn', true);
-        //window.location.pathname = '/home';
+        window.location.pathname = '/';
     };
 
     const submitLogin = (event) => {
@@ -74,9 +87,9 @@ export default function Login(props) {
     // on successful login, initialize localStorage.displayTS at current timeless stamp
     return (
         <>
-            <div className='p2'>
-                <Button onClick={handleShowSignup} className='m-1'>Sign Up</Button>
-                <Button onClick={handleShowLogin} className='m2'>Login</Button>
+            <div className='p2' id="loginPageContainer">
+                <Button onClick={handleShowSignup} className='m-1 mt-3'>Sign Up</Button>
+                <Button onClick={handleShowLogin} className='m-1 mt-3'>Login</Button>
             </div>
 
             <Modal show={showSignup} onHide={handleHideSignup}>
@@ -97,5 +110,45 @@ export default function Login(props) {
                 </Modal.Body>
             </Modal>
         </>
+    );
+}
+
+function SignupForm(props) {
+    return (
+        <Form id="appForm">
+            <Form.Group className="mb-3" controlId="first_name">
+                <Form.Label>First Name</Form.Label>
+                <Form.Control type="text" name="first_name" onChange={props.handleChange} value={props.signupData.first_name} />
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="last_name">
+                <Form.Label>Last Name</Form.Label>
+                <Form.Control type="text" name="last_name" onChange={props.handleChange} value={props.signupData.last_name} />
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="username">
+                <Form.Label>Username</Form.Label>
+                <Form.Control type="text" name="username" onChange={props.handleChange} value={props.signupData.username} />
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="password">
+                <Form.Label>Password</Form.Label>
+                <Form.Control type="text" name="password" onChange={props.handleChange} value={props.signupData.password} />
+            </Form.Group>
+            <Button id="appButton" onClick={props.submitSignup}>Sign Up</Button>
+        </Form>
+    );
+}
+
+function LoginForm(props) {
+    return (
+        <Form id="appForm">
+            <Form.Group className="mb-3" controlId="username">
+                <Form.Label>Username</Form.Label>
+                <Form.Control type="text" name="username" onChange={props.handleChange} value={props.loginData.username} />
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="password">
+                <Form.Label>Password</Form.Label>
+                <Form.Control type="text" name="password" onChange={props.handleChange} value={props.loginData.password} />
+            </Form.Group>
+            <Button id="appButton" onClick={props.submitLogin}>Login</Button>
+        </Form>
     );
 }

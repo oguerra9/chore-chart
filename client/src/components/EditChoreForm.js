@@ -81,7 +81,7 @@ export default function EditChoreForm(props) {
     };
 
     return (
-        <Form>
+        <Form id="appForm">
             <Form.Group>
                 <Form.Label>Title</Form.Label>
                 <Form.Control type="text" name="title" value={newChoreData.title} onChange={handleChange} />
@@ -189,7 +189,7 @@ export default function EditChoreForm(props) {
             ) : (
                 <></>
             )}
-            <Button onClick={submitChoreForm}>Add Chore</Button>
+            <Button id="appButton" onClick={submitChoreForm}>Save</Button>
         </Form>
     );
 }

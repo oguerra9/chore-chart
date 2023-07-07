@@ -26,7 +26,7 @@ export default function DateBar(props) {
                     <Button style={{'margin': '10px 0px 10px 0px'}} onClick={handleDecrement}>{'<'}</Button>
                 </div>
                 <div className="col-lg-4 justify-content-md-center">
-                    <h1 style={{'textAlign': 'center', 'margin': '10px 0px 10px 0px'}}>{dateString}</h1>
+                    <h1 style={{'textAlign': 'center', 'margin': '10px 0px 10px 0px'}} id="headText">{dateString}</h1>
                 </div>
                 <div md="auto">
                     <Button style={{'margin': '10px 0px 10px 0px'}} onClick={handleIncrement}>{'>'}</Button>

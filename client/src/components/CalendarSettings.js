@@ -65,7 +65,7 @@ export default function CalendarSettings(props) {
 
     return (
         <>
-        <Form>
+        <Form id="appForm">
             <Form.Group>
                 <Form.Label>Title</Form.Label>
                 <Form.Control 
@@ -79,7 +79,7 @@ export default function CalendarSettings(props) {
                 <div>
                     {formData.users.map((user) => (
                         <div className='d-flex mb-2' key={user.id}>
-                            <p style={{'color': user.color_code}} className="m-2 mb-0 d-flex align-self-center" key={user}>{user.display_name}</p>
+                            <div style={{'color': user.color_code}} className="m-2 mb-0 d-flex align-self-center" key={user}>{user.display_name}</div>
                             <Button onClick={editUser} name={JSON.stringify(user)} id="editButton">🔧</Button>
                         </div>
                         
@@ -91,7 +91,7 @@ export default function CalendarSettings(props) {
                 <div>
                     {formData.chores.map((chore) => (
                         <div className='d-flex mb-2' key={chore.id}>
-                            <div>{chore.title}</div>
+                            <div className="m-2 mb-0 d-flex align-self-center">{chore.title}</div>
                             <Button onClick={editChore} name={JSON.stringify(chore)} id="editButton">🔧</Button>
                         </div>
                     ))}
@@ -101,7 +101,7 @@ export default function CalendarSettings(props) {
                 <h4>Share Id</h4>
                 <p>{formData.id}</p>
             </div>
-            <Button onClick={handleSubmit}>Save Changes</Button>
+            <Button id="appButton" onClick={handleSubmit}>Save Changes</Button>
         </Form>
 
         <Modal show={showEditUser} onHide={handleHideEditUser}>
