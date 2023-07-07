@@ -47,9 +47,15 @@ class DataService {
         await fetch(`${BASE_URL}add_calender_`, {
             method: 'POST',
             headers: {
+                'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(calendarData),
+            body: JSON.stringify({
+                "title": calendarData.title,
+                "display_name": calendarData.display_name,
+                "color_code": calendarData.color_code,
+                "user_id": calendarData.color_code
+            }),
         }).then((response) => {
             console.log(`add calendar response:`);
             console.log(response);
@@ -64,7 +70,12 @@ class DataService {
             headers: {
               'Content-Type': 'application/json'
             },
-            body: JSON.stringify(joinData),
+            body: JSON.stringify({
+                "share_id": joinData.calendar_id,
+                "display_name": joinData.display_name,
+                "color_code": joinData.color_code,
+                "user_id": joinData.user_id
+            }),
         }).then((response) => {
             console.log('join calendar response:');
             console.log(response);
@@ -87,15 +98,27 @@ class DataService {
                 description: choreData.choreDescription,
                 start_date: choreData.start_date,
                 end_date: choreData.end_date,
-                first_user_idx: parseInt(choreData.first_user_idx),
-                freq: parseInt(choreData.freq),
-                time_inc: parseInt(choreData.time_inc),
+                first_user_idx: choreData.first_user_idx,
+                freq: choreData.freq,
+                time_inc: choreData.time_inc,
                 time_frame: choreData.time_frame,
                 does_repeat: choreData.does_repeat
             }),
         }).then((response) => {
             console.log(`add chore response`);
             console.log(response);
+            console.log( JSON.stringify({
+                title: choreData.chore_title,
+                calendar_id: choreData.calendar_id,
+                description: choreData.choreDescription,
+                start_date: choreData.start_date,
+                end_date: choreData.end_date,
+                first_user_idx: choreData.first_user_idx,
+                freq: choreData.freq,
+                time_inc: choreData.time_inc,
+                time_frame: choreData.time_frame,
+                does_repeat: choreData.does_repeat
+            }))
         });
     }
 

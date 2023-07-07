@@ -117,8 +117,10 @@ export default function NewChoreForm(props) {
         console.log(`adding chore with data:`);
         console.log(newChoreData);
         newChoreData.calendar_id = calendarId;
-        //newChoreData.does_repeat = newChoreData.does_repeat.toString();
+        newChoreData.does_repeat = newChoreData.does_repeat.toString();
         newChoreData.first_user_idx = newChoreData.first_user_idx.toString();
+        newChoreData.time_inc = newChoreData.time_inc.toString();
+        newChoreData.freq = newChoreData.freq.toString();
         // addChore({ string calendar_id, string title, string description, string start_date, string end_date, int first_user_idx, int freq, string time_frame, int time_inc, bool does_repeat })
         (DS.addChore(newChoreData)).then((response) => {
             console.log('adding chore...');

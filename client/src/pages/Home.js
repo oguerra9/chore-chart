@@ -204,7 +204,7 @@ function JoinCalendarForm() {
     const [joinData, setJoinData] = useState({
         calendar_id: '',
         display_name: '',
-        color_code: ''
+        color_code: '#000000'
     });
 
     const [sketchPickerColor, setSketchPickerColor] = useState('#000000');
@@ -215,6 +215,7 @@ function JoinCalendarForm() {
     };
 
     const handleSubmit = () => {
+        console.log(joinData);
         // add functionality to add user to calendar with id = joinData.calendar_id and add calendar id to user's calendars arr
         // add to calendar.users array:
         /*
@@ -228,6 +229,8 @@ function JoinCalendarForm() {
        /* joinData.calendar_id */
        console.log('joining calendar...');
        console.log(joinData);
+       joinData['user_id'] = localStorage.getItem('currUserId');
+       (DS.joinCalendar(joinData));
     };
 
     return (
@@ -264,118 +267,3 @@ function JoinCalendarForm() {
     );
 }
 
-
-
-
-/*
-    let calendars = [
-        {
-            id: '123',
-            title: 'Calendar #1',
-            users: [
-                {
-                    index: 0,
-                    first_name: 'Liv',
-                    last_name: 'Guerra',
-                    username: 'og123',
-                    display_name: 'liv',
-                    color_code: '#2D4356'
-                },
-                {
-                    index: 1,
-                    first_name: 'Mia',
-                    last_name: 'Guerra',
-                    username: 'mg123',
-                    display_name: 'mia',
-                    color_code: '#A76F6F'
-                },
-                {
-                    index: 2,
-                    first_name: 'Christine',
-                    last_name: 'Freddy',
-                    username: 'cf123',
-                    display_name: 'chris',
-                    color_code: '#435B66'
-                }
-            ],
-            chores: [
-                {
-                    chore_id: 1234,
-                    chore_title: "Sweep Floors - ED",
-                    start_date: 1690171200000,
-                    end_date: 1690516800000,
-                    first_user_idx: "1",
-                    time_frame: "week",
-                    freq: "1",
-                    does_repeat: true,
-                    time_inc: 604800000,
-                },
-                {
-                    chore_id: 4321,
-                    chore_title: "Vacuum - noED",
-                    start_date: 1689652800000,
-                    end_date: '',
-                    first_user_idx: "2",
-                    time_frame: "week",
-                    freq: "1",
-                    does_repeat: true,
-                    time_inc: 604800000,
-                },
-            ]
-        },
-        {
-            id: '4321',
-            title: 'Calendar #2',
-            users: [
-                {
-                    index: 0,
-                    first_name: 'Abby',
-                    last_name: 'Gale',
-                    username: 'ag123',
-                    display_name: 'ab',
-                    color_code: '#2D4356'
-                },
-                {
-                    index: 1,
-                    first_name: 'Tiffany',
-                    last_name: 'Ye',
-                    username: 'ty123',
-                    display_name: 'tiff',
-                    color_code: '#A76F6F'
-                },
-                {
-                    index: 2,
-                    first_name: 'Lena',
-                    last_name: 'Smith',
-                    username: 'ls123',
-                    display_name: 'lenny',
-                    color_code: '#435B66'
-                }
-            ],
-            chores: [
-                {
-                    chore_id: 1234,
-                    chore_title: "Sweep Floors 2 - ED",
-                    start_date: 1690171200000,
-                    end_date: 1690516800000,
-                    first_user_idx: "1",
-                    time_frame: "week",
-                    freq: "1",
-                    does_repeat: true,
-                    time_inc: 604800000,
-                },
-                {
-                    chore_id: 4321,
-                    chore_title: "Vacuum 2 - noED",
-                    start_date: 1689652800000,
-                    end_date: '',
-                    first_user_idx: "2",
-                    time_frame: "week",
-                    freq: "1",
-                    does_repeat: true,
-                    time_inc: 604800000,
-                },
-            ]
-        }
-    ];
-*/
