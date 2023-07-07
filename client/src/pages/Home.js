@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
@@ -8,16 +8,32 @@ import { SliderPicker } from 'react-color';
 import Calendar from './Calendar';
 import DateBar from '../components/DateBar';
 //import Nav from '../components/Nav';
-import NewChoreForm from '../components/NewChoreForm';
 import { Link } from "react-router-dom";
-  import DS from '../services/dataService';
+import DS from '../services/dataService';
 
-// props: handlePageChange(pageName)
+/* CURRENT DATASERVICE METHODS
+  ADD METHODS
+    addUser({ string username, string password})
+    addCalendar({ string title, string display_name, string color_code, string user_id })
+    joinCalendar({ string share_id, string user_id, string display_name, string color_code })
+    addChore({ string calendar_id, string title, string description, string start_date, string end_date, int first_user_idx, int freq, string time_frame, int time_inc, bool does_repeat })
+  GET METHODS
+    getUserByUsername( string username )
+    getUserCalendars( string userId )
+    getCalendarData( string calendarId )
+  EDIT METHODS
+    editCalendar({ string calendarId, string title })
+    editUserDisplay({ string userId, string display_name, string color_code }) ** only userId is required
+    editChore({ string choreId, string description, string start_data, string time_frame })  ** only choreId is required
+  DELETE METHODS
+    deleteCalendarUser({ string user_id, string calendar_id })
+    deleteChore( string choreId )
+    deleteCalendar( string calendar_id )
+*/
+
 export default function Home(props) {
-    // if (props.loggedIn === false) {
-    //     window.location.pathname = '/login';
-    // }
-    // give user option to create new calendar
+
+    const [calendars, setCalendars] = useState([]);
     const [showNewCalendar, setShowNewCalendar] = useState(false);
     const [showJoinCalendar, setShowJoinCalendar] = useState(false);
 
@@ -27,128 +43,34 @@ export default function Home(props) {
     const handleShowJoinCalendar = () => setShowJoinCalendar(true);
     const handleHideJoinCalendar = () => setShowJoinCalendar(false);
 
-    let calendars = [
-        {
-            id: '123',
-            title: 'Calendar #1',
-            users: [
-                {
-                    index: 0,
-                    first_name: 'Liv',
-                    last_name: 'Guerra',
-                    username: 'og123',
-                    display_name: 'liv',
-                    color_code: '#2D4356'
-                },
-                {
-                    index: 1,
-                    first_name: 'Mia',
-                    last_name: 'Guerra',
-                    username: 'mg123',
-                    display_name: 'mia',
-                    color_code: '#A76F6F'
-                },
-                {
-                    index: 2,
-                    first_name: 'Christine',
-                    last_name: 'Freddy',
-                    username: 'cf123',
-                    display_name: 'chris',
-                    color_code: '#435B66'
-                }
-            ],
-            chores: [
-                {
-                    id: 1234,
-                    title: "Sweep Floors - ED",
-                    start_date: 1690171200000,
-                    end_date: 1690516800000,
-                    first_user_index: "1",
-                    freq_frame: "week",
-                    freq_quantity: "1",
-                    repeating: true,
-                    time_inc: 604800000,
-                },
-                {
-                    id: 4321,
-                    title: "Vacuum - noED",
-                    start_date: 1689652800000,
-                    end_date: '',
-                    first_user_index: "2",
-                    freq_frame: "week",
-                    freq_quantity: "1",
-                    repeating: true,
-                    time_inc: 604800000,
-                },
-            ]
-        },
-        {
-            id: '4321',
-            title: 'Calendar #2',
-            users: [
-                {
-                    index: 0,
-                    first_name: 'Abby',
-                    last_name: 'Gale',
-                    username: 'ag123',
-                    display_name: 'ab',
-                    color_code: '#2D4356'
-                },
-                {
-                    index: 1,
-                    first_name: 'Tiffany',
-                    last_name: 'Ye',
-                    username: 'ty123',
-                    display_name: 'tiff',
-                    color_code: '#A76F6F'
-                },
-                {
-                    index: 2,
-                    first_name: 'Lena',
-                    last_name: 'Smith',
-                    username: 'ls123',
-                    display_name: 'lenny',
-                    color_code: '#435B66'
-                }
-            ],
-            chores: [
-                {
-                    id: 1234,
-                    title: "Sweep Floors 2 - ED",
-                    start_date: 1690171200000,
-                    end_date: 1690516800000,
-                    first_user_index: "1",
-                    freq_frame: "week",
-                    freq_quantity: "1",
-                    repeating: true,
-                    time_inc: 604800000,
-                },
-                {
-                    id: 4321,
-                    title: "Vacuum 2 - noED",
-                    start_date: 1689652800000,
-                    end_date: '',
-                    first_user_index: "2",
-                    freq_frame: "week",
-                    freq_quantity: "1",
-                    repeating: true,
-                    time_inc: 604800000,
-                },
-            ]
-        }
-    ];
+    useEffect(async () => {
+        await getCalendarList();
+    }, []);
+
+    const getCalendarList = async () => {
+        // getUserCalendars( userId )
+        let myCalendars = await (DS.getUserCalendars(localStorage.getItem('currUserId'))).then((response) => {
+            console.log(`retrieving calendar list for user with id ${localStorage.getItem('currUserId')}`);
+            console.log('calendar list response:');
+            console.log(response.data);
+            //setCalendars(response);
+            return response.data;
+        });
+        setCalendars(myCalendars);
+    };
 
     const directCalendar = (event) => {
         console.log(`redirecting to calendar with id ${event.target.name}`);
         localStorage.setItem('displayTS', (new Date().getTime()));
-        localStorage.setItem('currCalendar', event.target.name);
+        localStorage.setItem('currCalendarTitle', event.target.name);
+        localStorage.setItem('userCalId', event.target.value);
     };
 
     return (
         <>
         <div style={{'height': '100vh'}} id="homePageContainer">
             <div className='d-flex'>
-                <div id="pageTitleText" style={{'marginRight':'auto'}}>My Calendars</div>
+                <div id="pageTitleText" className='d-flex' style={{'marginRight':'auto'}}>My Calendars</div>
                 <Button onClick={handleShowNewCalendar} className="col-2 m-2">Create New Calendar</Button>
                 <Button onClick={handleShowJoinCalendar} className="col-2 m-2">Join an Existing Calendar</Button>
             </div>
@@ -156,8 +78,8 @@ export default function Home(props) {
             <div className='d-flex flex-wrap'>
                 {/* <Button onClick={combinedCalendar}>See all</Button> */}
                 {calendars.map(calendar => (
-                    <Link to={`/calendar/${calendar.id}`} key={calendar.id} className='col-2 m-2 d-flex flex-column'>
-                        <Button onClick={directCalendar}  name={calendar.id} id="calendarButton">{calendar.title}</Button>
+                    <Link to={`/calendar/${calendar.calendar_id}`} key={calendar.calendar_id} className='col-2 m-2 d-flex flex-column'>
+                        <Button onClick={directCalendar}  name={calendar.title} value={calendar.cl_usr_id} id="calendarButton">{calendar.title}</Button>
                     </Link>
                 ))}
             </div>
@@ -187,20 +109,18 @@ export default function Home(props) {
 function NewCalendarForm() {
     const [created, setCreated] = useState(false);
     const [shareId, setShareId] = useState('');
+    const [currUserId, setCurrUserId] = useState(localStorage.getItem('currUserId'));
 
     const [sketchPickerColor, setSketchPickerColor] = useState('#000000');
       // destructuring rgba from state
 
     // set default value of users[0].display_name to be current user's first name
+    // addCalendar({ title, display_name, color_code, user_id })
     const [newCalendarData, setNewCalendarData] = useState({
         title: '',
-        users: [
-            {
-                id: 'myId',
-                display_name: 'Liv',
-                color_code: ''
-            }
-        ]
+        display_name: '',
+        color_code: '',
+        user_id: ''
     });
 
     const handleChange = (event) => {
@@ -209,8 +129,6 @@ function NewCalendarForm() {
     };
 
     const handleNewCalendar = () => {
-        newCalendarData.users[0].color_code = sketchPickerColor;
-        console.log(sketchPickerColor);
         // add functionality to call addCalendar to add calendar to db with the calendarData and get calendar id in return
         // also add calendar's id to current user's user.calendars array of calendar ids
         /*  CALENDAR DATA
@@ -218,14 +136,18 @@ function NewCalendarForm() {
                 title: 'calendar title'
             }
         */
-       let calData = {
-        title: newCalendarData.title
-       };
+       console.log(currUserId);
+       console.log(sketchPickerColor);
+       newCalendarData.user_id = currUserId;
+       newCalendarData.color_code = sketchPickerColor; 
+       //setNewCalendarData({...newCalendarData, user_id: currUserId, color_code: sketchPickerColor});
+       console.log(newCalendarData);
 
-        (DS.addCalendar(calData)).then((response) => {
+        (DS.addCalendar(newCalendarData)).then((response) => {
             console.log('adding calendar...');
             console.log(response);
         });
+
         setShareId('calendarId');
         console.log('creating new calendar...');
         console.log(newCalendarData);
@@ -255,8 +177,8 @@ function NewCalendarForm() {
                         <Form.Label>Your Display Name</Form.Label>
                         <Form.Control 
                             type="text"
-                            name="users[0].display_name"
-                            value={newCalendarData.users[0].display_name}
+                            name="display_name"
+                            value={newCalendarData.display_name}
                             onChange={handleChange}
                         />
                     </Form.Group>
@@ -277,6 +199,7 @@ function NewCalendarForm() {
 
 }
 
+// joinCalendar({ share_id, user_id, display_name, color_code })
 function JoinCalendarForm() {
     const [joinData, setJoinData] = useState({
         calendar_id: '',
@@ -340,3 +263,119 @@ function JoinCalendarForm() {
         </Form>
     );
 }
+
+
+
+
+/*
+    let calendars = [
+        {
+            id: '123',
+            title: 'Calendar #1',
+            users: [
+                {
+                    index: 0,
+                    first_name: 'Liv',
+                    last_name: 'Guerra',
+                    username: 'og123',
+                    display_name: 'liv',
+                    color_code: '#2D4356'
+                },
+                {
+                    index: 1,
+                    first_name: 'Mia',
+                    last_name: 'Guerra',
+                    username: 'mg123',
+                    display_name: 'mia',
+                    color_code: '#A76F6F'
+                },
+                {
+                    index: 2,
+                    first_name: 'Christine',
+                    last_name: 'Freddy',
+                    username: 'cf123',
+                    display_name: 'chris',
+                    color_code: '#435B66'
+                }
+            ],
+            chores: [
+                {
+                    chore_id: 1234,
+                    chore_title: "Sweep Floors - ED",
+                    start_date: 1690171200000,
+                    end_date: 1690516800000,
+                    first_user_idx: "1",
+                    time_frame: "week",
+                    freq: "1",
+                    does_repeat: true,
+                    time_inc: 604800000,
+                },
+                {
+                    chore_id: 4321,
+                    chore_title: "Vacuum - noED",
+                    start_date: 1689652800000,
+                    end_date: '',
+                    first_user_idx: "2",
+                    time_frame: "week",
+                    freq: "1",
+                    does_repeat: true,
+                    time_inc: 604800000,
+                },
+            ]
+        },
+        {
+            id: '4321',
+            title: 'Calendar #2',
+            users: [
+                {
+                    index: 0,
+                    first_name: 'Abby',
+                    last_name: 'Gale',
+                    username: 'ag123',
+                    display_name: 'ab',
+                    color_code: '#2D4356'
+                },
+                {
+                    index: 1,
+                    first_name: 'Tiffany',
+                    last_name: 'Ye',
+                    username: 'ty123',
+                    display_name: 'tiff',
+                    color_code: '#A76F6F'
+                },
+                {
+                    index: 2,
+                    first_name: 'Lena',
+                    last_name: 'Smith',
+                    username: 'ls123',
+                    display_name: 'lenny',
+                    color_code: '#435B66'
+                }
+            ],
+            chores: [
+                {
+                    chore_id: 1234,
+                    chore_title: "Sweep Floors 2 - ED",
+                    start_date: 1690171200000,
+                    end_date: 1690516800000,
+                    first_user_idx: "1",
+                    time_frame: "week",
+                    freq: "1",
+                    does_repeat: true,
+                    time_inc: 604800000,
+                },
+                {
+                    chore_id: 4321,
+                    chore_title: "Vacuum 2 - noED",
+                    start_date: 1689652800000,
+                    end_date: '',
+                    first_user_idx: "2",
+                    time_frame: "week",
+                    freq: "1",
+                    does_repeat: true,
+                    time_inc: 604800000,
+                },
+            ]
+        }
+    ];
+*/

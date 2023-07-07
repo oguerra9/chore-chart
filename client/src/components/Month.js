@@ -24,7 +24,6 @@ export default function Month(props) {
 
         let dateArr = getDates();
         let monthArr = getMonthDays(dateArr);
-        console.log(monthArr);
         sortChores(monthArr);
     }, [displayTS]);
 
@@ -70,13 +69,13 @@ export default function Month(props) {
 
     /*
     {
-        title: "Sweep Floors",
+        chore_title: "Sweep Floors",
         start_date: 1690171200000,
         end_date: 1690516800000,
-        first_user_index: "1",
-        freq_frame: "week",
-        freq_quantity: "1",
-        repeating: true,
+        first_user_idx: "1",
+        time_frame: "week",
+        freq: "1",
+        does_repeat: true,
         time_inc: 604800000,
     },
     */
@@ -87,10 +86,10 @@ export default function Month(props) {
         for (let i = 0; i < choreArr.length; i++) {
             let chore = choreArr[i];
             monthArr.forEach((day) => {
-                if (chore.repeating === false) {
+                if (chore.does_repeat === false) {
                     if (chore.start_date === day.timelessStamp) {
                         let displayChore = {...chore};
-                        displayChore.user = users[chore.first_user_index];
+                        displayChore.user = users[chore.first_user_idx];
                         day.chores.push(displayChore);
                     } 
                 } else {
@@ -101,7 +100,7 @@ export default function Month(props) {
                                 timeDiff -= 3600000;
                             }
                             let instanceNum = timeDiff / chore.time_inc;
-                            let userIndex = parseInt(chore.first_user_index);
+                            let userIndex = parseInt(chore.first_user_idx);
                             let indexInc = (instanceNum % users.length);
                             userIndex += indexInc;
 
@@ -162,9 +161,9 @@ export default function Month(props) {
                                     <div className='mb-1'>{new Date(date).getDate()}</div>
                                     <div>
                                         {chores.map((chore) => (
-                                            <div className='d-flex' key={chore.title}>
+                                            <div className='d-flex' key={chore.chore_title}>
                                                 <div style={{'color': chore.user.color_code, 'textDecoration':'underline'}}>
-                                                    {chore.user.display_name} - {chore.title}
+                                                    {chore.user.display_name} - {chore.chore_title}
                                                 </div>
                                             </div>
                                         ))}

@@ -4,99 +4,12 @@ import React, { useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import Alert from 'react-bootstrap/Alert';
 import DS from '../services/dataService';
 
 
 // props: handlePageChange(pageName), handleLogin(bool)
 export default function Login(props) {
-
-    const [signupData, setSignupData] = useState({
-        username: '',
-        password: '',
-        first_name: '',
-        last_name: '',
-    });
-
-    const [loginData, setLoginData] = useState({
-        username: '',
-        password: ''
-    });
-
-    const handleSUChange = (event) => {
-        const { name, value } = event.target;
-        setSignupData({ ...signupData, [name]: value });
-    };
-
-    const handleLIChange = (event) => {
-        const { name, value } = event.target;
-        setLoginData({ ...loginData, [name]: value });
-    };
-
-    const submitSignup = (event) => {
-        event.preventDefault();
-        console.log('signing up new user...');
-        console.log('Data:');
-        console.log(signupData);
-        let userData = {
-            username: signupData.username,
-            password: signupData.password,
-            name: `${signupData.first_name} ${signupData.last_name}`
-        };
-        // functionality added to validate data and create new user
-        // but for now, we'll just redirect so we can show how the rest of the app works
-        (DS.getUserList()).then((response) => {
-            console.log('user list response');
-            console.log(response);
-            // get user list to make sure username is not already used
-            // might already be handled in backend, not really sure
-        });
-        (DS.addUser(userData)).then((response) => {
-            console.log('adding user...');
-            console.log(response);
-        });
-        handleHideSignup();
-        let currTime = new Date();
-        let currTS = currTime.getTime();
-        localStorage.setItem('displayTS', currTS);
-        props.handleLogin();
-        //props.handlePageChange('Home');
-        localStorage.setItem('loggedIn', true);
-        window.location.pathname = '/';
-    };
-
-    const submitLogin = (event) => {
-        event.preventDefault();
-        console.log('Logging in...');
-        console.log('Data:');
-        console.log(loginData);
-        // get user list just to see what we're working with
-        (DS.getUserList()).then((response) => {
-            console.log('user list');
-            console.log(response);
-        });
-
-        // actual functionality will be something more like this once we know that endpoint has been established
-        (DS.getUserByUsername(loginData.username)).then((response) => {
-            console.log(`response from looking for user ${loginData.username}:`);
-            console.log(response);
-            // if user is not found
-                // show user does not exist alert
-            // else if user is found, check password
-                // if loginData.password != userData.password
-                    // show incorrect password alert
-                // else if loginData.password === userData.password
-                    // set localStorage.setItem('currUserId', userData.id)
-                    // redirect to home page using
-                        // props.handleLogin()
-                        // localStorage.setItem('loggedIn', true)
-        })
-
-        let currTime = new Date();
-        let currTS = currTime.getTime();
-        localStorage.setItem('displayTS', currTS);
-        //props.handleLogin();
-        //localStorage.setItem('loggedIn', true);
-    };
 
     const [showSignup, setShowSignup] = useState(false);
     const [showLogin, setShowLogin] = useState(false);
@@ -121,7 +34,7 @@ export default function Login(props) {
                     <Modal.Title>Sign Up</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <SignupForm handleChange={handleSUChange} submitSignup={submitSignup} signupData={signupData} />
+                    <SignupForm handleHideSignup={handleHideSignup} handleLogin={props.handleLogin} />
                 </Modal.Body>
             </Modal>
 
@@ -130,49 +43,215 @@ export default function Login(props) {
                     <Modal.Title>Log In</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <LoginForm handleChange={handleLIChange} submitLogin={submitLogin} loginData={loginData} />
+                    <LoginForm handleHideLogin={handleHideLogin} handleLogin={props.handleLogin} />
                 </Modal.Body>
             </Modal>
         </>
     );
 }
 
+// props = handleHideSignup
 function SignupForm(props) {
+    const [signupData, setSignupData] = useState({
+        username: '',
+        password: '',
+    });
+
+    const [userSearchResult, setUserSearchResult] = useState([]);
+    const [showSUAlert, setShowSUAlert] = useState(false);
+    const [showExistsAlert, setShowExistsAlert] = useState(false);
+
+    const handleChange = (event) => {
+        const { name, value } = event.target;
+        setSignupData({ ...signupData, [name]: value });
+    };
+
+    // const findUser = async (username) => {
+    //     let searchResult = await (DS.getUserByUsername(username)).then((response) => {
+    //         console.log('response');
+    //         console.log(response);
+    //         return response.data;
+    //     });
+    //     console.log('searchResult');
+    //     console.log(searchResult);
+    //     setUserSearchResult(searchResult);
+    //     //return userSearchResult;
+    // }
+
+    const submitSignup = async (event) => {
+        event.preventDefault();
+        console.log('signing up new user...');
+        console.log('Data:');
+        console.log(signupData);
+        // functionality added to validate data and create new user
+        console.log(`calling addUser with signupData: ${JSON.stringify(signupData)}`);
+
+        // let userSearchResult = await (DS.getUserByUsername(signupData.username));//.then((response) => {
+        //     console.log('response');
+        //     console.log(response);
+        //     return response.data;
+        // });
+        // console.log('userSearchResult');
+        // console.log(userSearchResult);
+
+        // await findUser(signupData.username);
+        // console.log('userSearchResult');
+        // console.log(userSearchResult);
+        //console.log('userFound');
+        //console.log(userFound);
+
+        let searchResult = await (DS.getUserByUsername(signupData.username)).then((response) => {
+            console.log('response');
+            console.log(response);
+            return response.data;
+        });
+
+        let uniqueUsername = true;
+
+        if (searchResult.length === 0) {
+            console.log('username does not already exist');
+            uniqueUsername = true;
+        } else {
+            console.log('username already in use');
+            setShowExistsAlert(true);
+            uniqueUsername = false;
+        }
+
+        if (uniqueUsername) {
+            await (DS.addUser(signupData)).then((response) => {
+                console.log('adding user...');
+                console.log(response);
+                console.log('response body');
+                console.log(response.body.user_id);
+                if (response.status === 200) {
+                    localStorage.setItem('currUserId', response.user_id);
+                    props.handleHideSignup();
+                } else {
+                    setShowSUAlert(true);
+                }
+            });
+        }
+
+        searchResult = await (DS.getUserByUsername(signupData.username)).then((response) => {
+            console.log('response');
+            console.log(response);
+            localStorage.setItem('currUserId', response.data[0].user_id)
+            return response.data;
+        });
+
+        //props.handleHideSignup();
+        let currTime = new Date();
+        let currTS = currTime.getTime();
+        localStorage.setItem('displayTS', currTS);
+        localStorage.setItem('loggedIn', true);
+        window.location.pathname = '/';
+    };
+
     return (
         <Form id="appForm">
-            <Form.Group className="mb-3" controlId="first_name">
-                <Form.Label>First Name</Form.Label>
-                <Form.Control type="text" name="first_name" onChange={props.handleChange} value={props.signupData.first_name} />
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="last_name">
-                <Form.Label>Last Name</Form.Label>
-                <Form.Control type="text" name="last_name" onChange={props.handleChange} value={props.signupData.last_name} />
-            </Form.Group>
+            {showSUAlert ? (
+                <Alert>Signup Error</Alert>
+            ) : (<></>)}
+            {showExistsAlert ? (
+                <Alert>Username already in use</Alert>
+            ) : (<></>)}
             <Form.Group className="mb-3" controlId="username">
                 <Form.Label>Username</Form.Label>
-                <Form.Control type="text" name="username" onChange={props.handleChange} value={props.signupData.username} />
+                <Form.Control type="text" name="username" onChange={handleChange} value={signupData.username} />
             </Form.Group>
             <Form.Group className="mb-3" controlId="password">
                 <Form.Label>Password</Form.Label>
-                <Form.Control type="text" name="password" onChange={props.handleChange} value={props.signupData.password} />
+                <Form.Control type="text" name="password" onChange={handleChange} value={signupData.password} />
             </Form.Group>
-            <Button id="appButton" onClick={props.submitSignup}>Sign Up</Button>
+            <Button id="appButton" onClick={submitSignup}>Sign Up</Button>
         </Form>
     );
 }
 
+// props = handleHideLogin
 function LoginForm(props) {
+
+    const [showDNE, setShowDNE] = useState(false);
+    const [showInvalidPass, setShowInvalidPass] = useState(false);
+
+    const [loginData, setLoginData] = useState({
+        username: '',
+        password: ''
+    });
+
+    const handleChange = (event) => {
+        const { name, value } = event.target;
+        setLoginData({ ...loginData, [name]: value });
+
+        if (showDNE === true) {
+            setShowDNE(false);
+        }
+
+        if (showInvalidPass === true) {
+            setShowInvalidPass(false);
+        }
+    };
+
+
+    
+    const submitLogin = (event) => {
+        event.preventDefault();
+        console.log('Logging in...');
+        console.log('Data:');
+        console.log(loginData);
+
+        // actual functionality will be something more like this once we know that endpoint has been established
+        (DS.getUserByUsername(loginData.username)).then((response) => {
+            console.log(`response from looking for user ${loginData.username}:`);
+            console.log(response);
+            if (response.length === 0) {    // user is not found
+                setShowDNE(true);
+            } else {
+                let userDocData = response.data[0];
+                console.log('userDocData');
+                console.log(userDocData);
+                console.log(`loginData.password != userDocData.password`);
+                console.log(`${loginData.password} != ${userDocData.password}`);
+                console.log(loginData.password != userDocData.password);
+                if (loginData.password != userDocData.password) {
+                    setShowInvalidPass(true);
+                } else {
+                    localStorage.setItem('currUserId', userDocData.user_id);
+
+                    let currTime = new Date();
+                    let currTS = currTime.getTime();
+                    localStorage.setItem('displayTS', currTS);
+                    localStorage.setItem('loggedIn', true);
+                    props.handleLogin();
+                    window.location.pathname = '/';
+                    
+                }
+            }
+        });
+
+        
+        //props.handleLogin();
+        //localStorage.setItem('loggedIn', true);
+    };
+
+
     return (
         <Form id="appForm">
+            {showDNE ? (
+                <Alert>Username not found</Alert>
+            ) : (<></>)}
+            {showInvalidPass ? (
+                <Alert>Incorrect Password</Alert>
+            ) : (<></>)}
             <Form.Group className="mb-3" controlId="username">
                 <Form.Label>Username</Form.Label>
-                <Form.Control type="text" name="username" onChange={props.handleChange} value={props.loginData.username} />
+                <Form.Control type="text" name="username" onChange={handleChange} value={loginData.username} />
             </Form.Group>
             <Form.Group className="mb-3" controlId="password">
                 <Form.Label>Password</Form.Label>
-                <Form.Control type="text" name="password" onChange={props.handleChange} value={props.loginData.password} />
+                <Form.Control type="text" name="password" onChange={handleChange} value={loginData.password} />
             </Form.Group>
-            <Button id="appButton" onClick={props.submitLogin}>Login</Button>
+            <Button id="appButton" onClick={submitLogin}>Login</Button>
         </Form>
     );
 }

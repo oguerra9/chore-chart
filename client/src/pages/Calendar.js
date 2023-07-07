@@ -8,147 +8,55 @@ import NewChoreForm from '../components/NewChoreForm';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Offcanvas from 'react-bootstrap/Offcanvas';
-import {
-    BrowserRouter,
-    Routes,
-    Route,
-    Link,
-    HashRouter,
-    useParams
-  } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import DS from '../services/dataService';
+
+
+/* CURRENT DATASERVICE METHODS
+  ADD METHODS
+    addUser({ string username, string password})
+    addCalendar({ string title, string display_name, string color_code, string user_id })
+    joinCalendar({ string share_id, string user_id, string display_name, string color_code })
+    addChore({ string calendar_id, string title, string description, string start_date, string end_date, int first_user_idx, int freq, string time_frame, int time_inc, bool does_repeat })
+  GET METHODS
+    getUserByUsername( string username )
+    getUserCalendars( string userId )
+    getCalendarData( string calendarId )
+  EDIT METHODS
+    editCalendar({ string calendarId, string title })
+    editUserDisplay({ string userId, string display_name, string color_code }) ** only userId is required
+    editChore({ string choreId, string description, string start_data, string time_frame })  ** only choreId is required
+  DELETE METHODS
+    deleteCalendarUser({ string user_id, string calendar_id })
+    deleteChore( string choreId )
+    deleteCalendar( string calendar_id )
+*/
 
 // props: handlePageChange(pageName), calendarData
 export default function Calendar(props) {
     // can use Holidays by API-Ninja to add holidays etc to calendar for extra * pizazz *
     const [displayTS, setDisplayTS] = useState('');
-    let { id } = useParams();
-    console.log(`param id = ${id}`);
     const [displayView, setDisplayView] = useState('');
     const [displayId, setDisplayId] = useState(useParams().id);
-    const [calendarArr, setCalendarArr] = useState([
-        {
-            id: '123',
-            title: 'Calendar #1',
-            users: [
-                {
-                    index: 0,
-                    first_name: 'Liv',
-                    last_name: 'Guerra',
-                    username: 'og123',
-                    display_name: 'liv',
-                    color_code: '#2D4356'
-                },
-                {
-                    index: 1,
-                    first_name: 'Mia',
-                    last_name: 'Guerra',
-                    username: 'mg123',
-                    display_name: 'mia',
-                    color_code: '#A76F6F'
-                },
-                {
-                    index: 2,
-                    first_name: 'Christine',
-                    last_name: 'Freddy',
-                    username: 'cf123',
-                    display_name: 'chris',
-                    color_code: '#435B66'
-                }
-            ],
-            chores: [
-                {
-                    id: 1234,
-                    title: "Sweep Floors - ED",
-                    start_date: 1690171200000,
-                    end_date: 1690516800000,
-                    first_user_index: "1",
-                    freq_frame: "week",
-                    freq_quantity: "1",
-                    repeating: true,
-                    time_inc: 604800000,
-                },
-                {
-                    id: 4321,
-                    title: "Vacuum - noED",
-                    start_date: 1689652800000,
-                    end_date: '',
-                    first_user_index: "2",
-                    freq_frame: "week",
-                    freq_quantity: "1",
-                    repeating: true,
-                    time_inc: 604800000,
-                },
-            ]
-        },
-        {
-            id: '4321',
-            title: 'Calendar #2',
-            users: [
-                {
-                    index: 0,
-                    first_name: 'Abby',
-                    last_name: 'Gale',
-                    username: 'ag123',
-                    display_name: 'ab',
-                    color_code: '#2D4356'
-                },
-                {
-                    index: 1,
-                    first_name: 'Tiffany',
-                    last_name: 'Ye',
-                    username: 'ty123',
-                    display_name: 'tiff',
-                    color_code: '#A76F6F'
-                },
-                {
-                    index: 2,
-                    first_name: 'Lena',
-                    last_name: 'Smith',
-                    username: 'ls123',
-                    display_name: 'lenny',
-                    color_code: '#435B66'
-                }
-            ],
-            chores: [
-                {
-                    id: 1234,
-                    title: "Sweep Floors 2 - ED",
-                    start_date: 1690171200000,
-                    end_date: 1690516800000,
-                    first_user_index: "1",
-                    freq_frame: "week",
-                    freq_quantity: "1",
-                    repeating: true,
-                    time_inc: 604800000,
-                },
-                {
-                    id: 4321,
-                    title: "Vacuum 2 - noED",
-                    start_date: 1689652800000,
-                    end_date: '',
-                    first_user_index: "2",
-                    freq_frame: "week",
-                    freq_quantity: "1",
-                    repeating: true,
-                    time_inc: 604800000,
-                },
-            ]
-        }
-    ]);
+    const [calendarArr, setCalendarArr] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [refreshCount, setRefreshCount] = useState(0);
 
-    const getCalendarData = () => {
-        // will be replaced with call to db to retrieve data for calendar with displayId
-        let retData = {};
-        for (let i = 0; i < calendarArr.length; i++) {
-            if (calendarArr[i].id === displayId) {
-                retData = calendarArr[i];
-                break;
-            }
-        }
-        return retData;
-    };
 
-    const [calendarData, setCalendarData] = useState(getCalendarData);
+    // const getCalendarData = () => {
+    //     // will be replaced with call to db to retrieve data for calendar with displayId
+    //     let retData = {};
+    //     for (let i = 0; i < calendarArr.length; i++) {
+    //         if (calendarArr[i].id === displayId) {
+    //             retData = calendarArr[i];
+    //             break;
+    //         }
+    //     }
+    //     return retData;
+    // };
+
+    const [calendarData, setCalendarData] = useState([]);
+    const [calendarTitle, setCalendarTitle] = useState(localStorage.getItem('currCalendarTitle'));
     
     const [calendarChores, setCalendarChores] = useState([]);
 
@@ -161,7 +69,7 @@ export default function Calendar(props) {
     const handleShowCalendarSettings = () => setShowCalendarSettings(true);
     const handleHideCalendarSettings = () => setShowCalendarSettings(false);
 
-    useEffect(() => {
+    useEffect(async () => {
 
         if (localStorage.hasOwnProperty('displayTS')) {
             setDisplayTS(new Date(localStorage.getItem('displayTS')));
@@ -171,14 +79,32 @@ export default function Calendar(props) {
             setDisplayView(localStorage.getItem('setDisplayView'));
         }
 
-        setCalendarData(getCalendarData());
+        await retrieveCalendarData();
+        console.log('');
+        // setCalendarData(getCalendarData());
     }, []);
+    //}, [refreshCount]);
 
-    
+    const retrieveCalendarData = async () => {
+        let retrievedData = await (DS.getCalendarData(displayId)).then((response) => {
+            console.log(`calendar data response`);
+            console.log(response.data);
+            return response.data;
+        });
 
-    const handleChangeData = (newCalendarData) => {
-        setCalendarData(newCalendarData);
+        console.log('retrievedData');
+        console.log(retrievedData);
+        setCalendarData(retrievedData);
+        setLoading(false);
+    }
+
+    const handleChangeData = async () => {
+        //setCalendarData(newCalendarData);
+        console.log('data change');
+        await retrieveCalendarData();
+        setRefreshCount(refreshCount + 1);
         handleHideCalendarSettings();
+        window.location.pathname = window.location.pathname;
     };
 
     return (
@@ -186,20 +112,25 @@ export default function Calendar(props) {
             <div className='p-2' id="calendarPageContainer">
                 <div className='d-flex'>
                     <Link to="/home" className="m-2"><Button id='backButton'>{'<'}</Button></Link>
-                    <div className="m-2" style={{'marginRight': 'auto'}} id="headText">{calendarData.title}</div>
+                    <div className="m-2" style={{'marginRight': 'auto'}} id="headText">{calendarTitle}</div>
                     <Button onClick={handleShowChoreForm} id="newChoreButton" className="col-2">Add New Chore</Button>
                     <Button onClick={handleShowCalendarSettings} className="m-2" id="settingsButton">⚙️</Button>
                 </div>
                 
-                <Month scheduledChores={calendarData.chores} userArr={calendarData.users} />
+                {loading ? (
+                    <></>
+                ) : (
+                    <Month scheduledChores={calendarData.chores} userArr={calendarData.users} />
+                )}
             </div>
+            
 
             <Modal show={showChoreForm} onHide={handleHideChoreForm}>
                 <Modal.Header closeButton>
                     <Modal.Title>Add New Chore</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <NewChoreForm calendarUsers={calendarData.users} />
+                    <NewChoreForm calendarUsers={calendarData.users} handleHideChoreForm={handleHideChoreForm} handleChangeData={handleChangeData} />
                 </Modal.Body>
             </Modal>
 
@@ -208,7 +139,7 @@ export default function Calendar(props) {
                     <Offcanvas.Title>Calendar Settings</Offcanvas.Title>
                 </Offcanvas.Header>
                 <Offcanvas.Body>
-                    <CalendarSettings calendarData={calendarData} handleChangeData={handleChangeData} />
+                    <CalendarSettings calendarData={{...calendarData, calendar_id: displayId, title: calendarTitle}} handleChangeData={handleChangeData} />
                 </Offcanvas.Body>
             </Offcanvas>
         </>

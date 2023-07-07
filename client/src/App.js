@@ -14,6 +14,7 @@ export default function App() {
 
   const handleLogin = () => {
     setLoggedIn('true');
+    window.location.pathname = '/';
   };
 
   const handleLogout = () => {
