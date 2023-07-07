@@ -1,3 +1,22 @@
+/*  FUNCTIONS       [ * = NEEDED ]
+    User
+        addUser
+        getUserList
+        getUserById(id)
+        getUserByUsername(username)
+        * editUser
+    Calendar
+        addCalendar
+        getCalendarList
+        getCalendarById(id)
+        * editCalendar
+    Chores
+        addChore
+        * getChore(id)
+        * editChore(id)
+
+*/
+
 /*      CURRENT ENDPOINTS
 
 fetch('http://34.73.17.225:8111/add_user_', {
@@ -64,24 +83,26 @@ fetch('http://34.73.17.225:8111/get_user_?' + new URLSearchParams({
 })).then(res => res.json()).then(body => {console.log(body)});
 */
 
+/*
 
+//Get calenders list
+fetch('http://34.73.17.225:8111/get_calender_').then(res => res.json()).then(body => {console.log(body)});
+
+//Get calender view for a given calender with id
+fetch('http://34.73.17.225:8111/get_calender_?' + new URLSearchParams({
+    id: '1'
+})).then(res => res.json()).then(body => {console.log(body)});
+
+//Get users list
+fetch('http://34.73.17.225:8111/get_user_').then(res => res.json()).then(body => {console.log(body)});
+
+fetch('http://34.73.17.225:8111/get_user_?' + new URLSearchParams({
+    id: '1'
+})).then(res => res.json()).then(body => {console.log(body)});
+*/
 
 class DataService {
-    // async getUser(username) {
-    //     await getDoc(doc(db, "users", username))
-    //         .then((querySnapshot)=>{               
-    //             return querySnapshot.data();
-    //         })
-    // }
     async addUser(userData) {
-        // currently receiving Status 500: Internal Server Error when trying to add new user
-        /* USER DATA
-            {
-                username: 'palle',
-                password: '123',
-                name: 'Palle'
-            }
-        */
         fetch('http://34.73.17.225:8111/add_user_', {
             method: 'POST',
             headers: {
@@ -94,15 +115,35 @@ class DataService {
         })
     }
 
+    async getUserList() {
+        fetch('http://34.73.17.225:8111/get_user_')
+            .then(res => res.json())
+            .then(body => {
+                console.log(body)
+            });
+    }
+
+    async getUserById(userId) {
+        fetch('http://34.73.17.225:8111/get_user_?' + new URLSearchParams({
+            id: userId
+        }))
+            .then(res => res.json())
+            .then(body => {
+                console.log(body)
+            });
+    }
+
+    async getUserByUsername(username) {
+        fetch('http://34.73.17.225:8111/get_user_?' + new URLSearchParams({
+            username: username
+        }))
+            .then(res => res.json())
+            .then(body => {
+                console.log(body)
+            });
+    }
+
     async addCalendar(calendarData) {
-        // working to add new calendar with field 'title'
-        // need to add functionality to automatically add current user to calendar list of users
-        /*  CALENDAR DATA
-            {
-                title: 'calendar title',
-                
-            }
-        */
         fetch('http://34.73.17.225:8111/add_calender_', {
             method: 'POST',
             headers: {
@@ -115,19 +156,25 @@ class DataService {
         });
     }
 
+    async getCalendarList() {
+        fetch('http://34.73.17.225:8111/get_calender_')
+            .then(res => res.json())
+            .then(body => {
+                console.log(body)
+            });
+    }
+
+    async getCalendarById(calendarId) {
+        fetch('http://34.73.17.225:8111/get_calender_?' + new URLSearchParams({
+            id: calendarId
+        }))
+            .then(res => res.json())
+            .then(body => {
+                console.log(body)
+            });
+    }
+
     async addChore(choreData) {
-        /*  CHORE DATA
-            {
-                title: 'chore title',
-                description: 'chore description',
-                start_date: '2023/07/06',
-                end_date: '2023/08/06',
-                first_user_idx: 1,
-                freq: 2,
-                time_inc: 1,
-                does_repeat: true
-            }
-        */
         fetch('http://34.73.17.225:8111/add_chore_', {
             method: 'POST',
             headers: {

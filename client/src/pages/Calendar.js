@@ -138,21 +138,13 @@ export default function Calendar(props) {
 
     const getCalendarData = () => {
         // will be replaced with call to db to retrieve data for calendar with displayId
-        console.log('calendar arr');
-        console.log(calendarArr);
-        console.log('display id');
-        console.log(displayId);
         let retData = {};
         for (let i = 0; i < calendarArr.length; i++) {
             if (calendarArr[i].id === displayId) {
                 retData = calendarArr[i];
-                console.log('retData');
-                console.log(retData);
                 break;
             }
         }
-        console.log('retData');
-        console.log(retData);
         return retData;
     };
 
@@ -171,10 +163,6 @@ export default function Calendar(props) {
 
     useEffect(() => {
 
-        console.log(`displayId = ${displayId}`);
-        console.log(`calendarData`);
-        console.log(calendarData);
-
         if (localStorage.hasOwnProperty('displayTS')) {
             setDisplayTS(new Date(localStorage.getItem('displayTS')));
         }
@@ -184,23 +172,6 @@ export default function Calendar(props) {
         }
 
         setCalendarData(getCalendarData());
-
-        // console.log('calendarData');
-        // console.log(calendarData);
-        // console.log(`calendarData === 'empty'`);
-        // console.log(`${calendarData} === ${'empty'}`);
-        // console.log(calendarData === 'empty');
-        // if (calendarData == 'empty') {
-        //     getCalendarData();
-            // console.log('data');
-            // console.log(data);
-            
-            // console.log('calendar data');
-            // console.log(calendarData);
-        // }
-        
-        //console.log('calendarChores');
-        //console.log(calendarChores);
     }, []);
 
     
@@ -209,7 +180,7 @@ export default function Calendar(props) {
         setCalendarData(newCalendarData);
         handleHideCalendarSettings();
     };
-    // ◀️⬅️🔙
+
     return (
         <>
             <div className='p-2' id="calendarPageContainer">
@@ -240,15 +211,6 @@ export default function Calendar(props) {
                     <CalendarSettings calendarData={calendarData} handleChangeData={handleChangeData} />
                 </Offcanvas.Body>
             </Offcanvas>
-
-            {/* <Modal show={showCalendarSettings} onHide={handleHideCalendarSettings}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Calendar Settings</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <CalendarSettings calendarData={calendarData} handleChangeData={handleChangeData} />
-                </Modal.Body>
-            </Modal> */}
         </>
     )
 }

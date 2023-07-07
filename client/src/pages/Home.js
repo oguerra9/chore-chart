@@ -139,26 +139,14 @@ export default function Home(props) {
     ];
 
     const directCalendar = (event) => {
-        console.log(event.target);
         console.log(`redirecting to calendar with id ${event.target.name}`);
         localStorage.setItem('displayTS', (new Date().getTime()));
         localStorage.setItem('currCalendar', event.target.name);
-        //window.location.pathname = `/calendar/${event.target.name}`;
-        //handlePageChange('calendar');
     };
-
-    // const combinedCalendar = () => {
-    //     console.log(`redirecting to calendar with data from all calendars`);
-    //     localStorage.setItem('currCalendar', 'combinedCalendar');
-    //     localStorage.setItem('displayTS', (new Date().getTime()));
-
-    //     window.location.pathname = `/calendar/combined`;
-    //     //handlePageChange('calendar');
-    // }
 
     return (
         <>
-        <div className='p-2' style={{'height': '100vh'}} id="homePageContainer">
+        <div style={{'height': '100vh'}} id="homePageContainer">
             <div className='d-flex'>
                 <div id="pageTitleText" style={{'marginRight':'auto'}}>My Calendars</div>
                 <Button onClick={handleShowNewCalendar} className="col-2 m-2">Create New Calendar</Button>

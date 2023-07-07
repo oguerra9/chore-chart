@@ -90,30 +90,18 @@ export default function NewChoreForm(props) {
                 does_repeat: true
             }
         */
-    //    let choreData = {
-    //     title: newChoreData.title,
-    //     description: newChoreData.description,
-    //     // start_date: newChoreData.start_date,
-    //     // end_date: newChoreData.end_date,
-    //     start_date: '2023/07/11',
-    //     end_date: '2023/08/12',
-    //     first_user_idx: newChoreData.first_user_index,
-    //     freq: newChoreData.freq_quantity,
-    //     // freq_frame: newChoreData.freq_frame,
-    //     // freq_quantity: newChoreData.freq_quantity,
-    //     time_inc: newChoreData.time_inc,
-    //     does_repeat: newChoreData.repeating
-    //    };
-        let choreData =  {
-            title: 'chore title',
-            description: 'chore description',
-            start_date: '2023/07/06',
-            end_date: '2023/08/06',
-            first_user_idx: 1,
-            freq: 2,
-            time_inc: 1,
-            does_repeat: true
-        };
+       let choreData = {
+        title: newChoreData.title,
+        description: newChoreData.description,
+        start_date: newChoreData.start_date,
+        end_date: newChoreData.end_date,
+        first_user_idx: newChoreData.first_user_index,
+        freq: newChoreData.freq_quantity,
+        time_frame: newChoreData.freq_frame,
+        // freq_quantity: newChoreData.freq_quantity,
+        time_inc: newChoreData.time_inc,
+        does_repeat: newChoreData.repeating
+       };
         (DS.addChore(choreData)).then((response) => {
             console.log('adding chore...');
             console.log(response);

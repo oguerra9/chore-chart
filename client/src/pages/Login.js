@@ -44,10 +44,16 @@ export default function Login(props) {
         };
         // functionality added to validate data and create new user
         // but for now, we'll just redirect so we can show how the rest of the app works
-        // (DS.addUser(userData)).then((response) => {
-        //     console.log('adding user...');
-        //     console.log(response);
-        // });
+        (DS.getUserList()).then((response) => {
+            console.log('user list response');
+            console.log(response);
+            // get user list to make sure username is not already used
+            // might already be handled in backend, not really sure
+        });
+        (DS.addUser(userData)).then((response) => {
+            console.log('adding user...');
+            console.log(response);
+        });
         handleHideSignup();
         let currTime = new Date();
         let currTS = currTime.getTime();
@@ -63,15 +69,33 @@ export default function Login(props) {
         console.log('Logging in...');
         console.log('Data:');
         console.log(loginData);
-        // functionality added to actually log user in and validate username and password match
-        // but for now, we'll just redirect so we can show how the rest of the app works
+        // get user list just to see what we're working with
+        (DS.getUserList()).then((response) => {
+            console.log('user list');
+            console.log(response);
+        });
+
+        // actual functionality will be something more like this once we know that endpoint has been established
+        (DS.getUserByUsername(loginData.username)).then((response) => {
+            console.log(`response from looking for user ${loginData.username}:`);
+            console.log(response);
+            // if user is not found
+                // show user does not exist alert
+            // else if user is found, check password
+                // if loginData.password != userData.password
+                    // show incorrect password alert
+                // else if loginData.password === userData.password
+                    // set localStorage.setItem('currUserId', userData.id)
+                    // redirect to home page using
+                        // props.handleLogin()
+                        // localStorage.setItem('loggedIn', true)
+        })
+
         let currTime = new Date();
         let currTS = currTime.getTime();
         localStorage.setItem('displayTS', currTS);
-        props.handleLogin();
-        localStorage.setItem('loggedIn', true);
-        //window.location.pathname = '/home'
-        //props.handlePageChange('Home');
+        //props.handleLogin();
+        //localStorage.setItem('loggedIn', true);
     };
 
     const [showSignup, setShowSignup] = useState(false);
