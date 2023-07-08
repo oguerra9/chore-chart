@@ -34,6 +34,7 @@ export default function Home(props) {
     }
 
     useEffect(async () => {
+        console.log('home page use effect');
         await getCalendarList();
     }, [refresh]);
 

@@ -34,7 +34,7 @@ export default function Login(props) {
                     <Modal.Title>Sign Up</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <SignupForm handleHideSignup={handleHideSignup} handleLogin={props.handleLogin} />
+                    <SignupForm handleHideSignup={handleHideSignup} handleLogin={props.handleLogin} toggleMainRefresh={props.toggleMainRefresh} />
                 </Modal.Body>
             </Modal>
 
@@ -43,7 +43,7 @@ export default function Login(props) {
                     <Modal.Title>Log In</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <LoginForm handleHideLogin={handleHideLogin} handleLogin={props.handleLogin} />
+                    <LoginForm handleHideLogin={handleHideLogin} handleLogin={props.handleLogin} toggleMainRefresh={props.toggleMainRefresh} />
                 </Modal.Body>
             </Modal>
         </>
@@ -103,17 +103,19 @@ function SignupForm(props) {
                 let currTS = currTime.getTime();
                 localStorage.setItem('displayTS', currTS);
                 localStorage.setItem('loggedIn', true);
+                props.handleLogin();
                 
                 
-            });
-            await (DS.getUserByUsername(signupData.username)).then((response) => {
-                console.log('response');
-                console.log(response);
-                return response.data;
-            });
-            
-            props.handleLogin();
-            window.location.pathname = '/';
+            }).then(window.location.pathame='/');
+            // await (DS.getUserByUsername(signupData.username)).then((response) => {
+            //     console.log('response');
+            //     console.log(response);
+            //     localStorage.setItem('currUserId', response.data[0].user_id)
+            //     return response.data;
+            // });
+
+            //props.toggleMainRefresh();
+            //window.location.pathname = '/#/home';
         }
         //props.handleHideSignup();
         

@@ -11,11 +11,13 @@ import Button from 'react-bootstrap/Button';
 export default function App() {
 
   const [loggedIn, setLoggedIn] = useState(false);
+  const [mainRefresh, setMainRefresh] = useState(true);
 
   const handleLogin = () => {
     setLoggedIn('true');
     window.location.pathname = '/';
   };
+
 
   const handleLogout = () => {
     localStorage.setItem('loggedIn', false);
@@ -25,11 +27,19 @@ export default function App() {
     setLoggedIn('false');
   }
 
+  const toggleMainRefresh = () => {
+    if (mainRefresh === true) {
+      setMainRefresh(false);
+    } else {
+      setMainRefresh(true);
+    }
+  }
+
   useEffect(() => {
     if (localStorage.hasOwnProperty('loggedIn')) {
       setLoggedIn(localStorage.getItem('loggedIn'));
     }
-  }, [loggedIn]);
+  }, [loggedIn, mainRefresh]);
 
   return (
     <div id="fullAppContainer">
@@ -44,7 +54,7 @@ export default function App() {
       </div>
 
       <Routes>
-        <Route path="/login" element={<Login handleLogin={handleLogin} />}/>
+        <Route path="/login" element={<Login handleLogin={handleLogin} toggleMainRefresh={toggleMainRefresh} />}/>
         {loggedIn === 'true' ? (
           <>
           <Route path="/home" element={<Home />}/>
