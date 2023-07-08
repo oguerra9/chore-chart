@@ -203,16 +203,16 @@ class DataService {
 
     /*                      DELETE METHODS                      */
 
-    //deleteCalendarUser({ string user_id, string calendar_id })
-    async deleteCalendarUser(ids) {
-        await fetch(`${BASE_URL}delete_user_in_calendar`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(deleteCalendarUser),
-        });
-    }
+    // //deleteCalendarUser({ string user_id, string calendar_id })
+    // async deleteCalendarUser(ids) {
+    //     await fetch(`${BASE_URL}delete_user_in_calendar`, {
+    //         method: 'POST',
+    //         headers: {
+    //             'Content-Type': 'application/json'
+    //         },
+    //         body: JSON.stringify(deleteCalendarUser),
+    //     });
+    // }
     
     //deleteChore( string choreId )
     async deleteChore(choreId) {
