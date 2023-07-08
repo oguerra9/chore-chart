@@ -197,7 +197,7 @@ function LoginForm(props) {
                     localStorage.setItem('displayTS', currTS);
                     localStorage.setItem('loggedIn', true);
                     props.handleLogin();
-                    window.location.pathname = '/';
+                    window.location.pathname = '/chore-chart/';
                     
                 }
             }
