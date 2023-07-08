@@ -59,7 +59,7 @@ class DataService {
     }
 
     async addCalendar(calendarData) {
-        fetch('http://34.73.17.225:8111/add_calender_', {
+        fetch('http://34.73.17.225:8111/add_calendar_', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

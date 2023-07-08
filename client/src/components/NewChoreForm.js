@@ -56,7 +56,7 @@ export default function NewChoreForm(props) {
     const [newChoreData, setNewChoreData] = useState({
         calendar_id: '',
         chore_title: '',
-        chore_description: '',
+        description: '',
         start_date: '',
         end_date: '',
         first_user_idx: '',
@@ -186,7 +186,7 @@ export default function NewChoreForm(props) {
             
             <Form.Group>
                 <Form.Label>Description</Form.Label>
-                <Form.Control type="text" name="chore_description" value={newChoreData.chore_description} onChange={handleChange} />
+                <Form.Control type="text" name="description" value={newChoreData.description} onChange={handleChange} />
             </Form.Group>
             
             

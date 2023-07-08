@@ -66,18 +66,6 @@ function SignupForm(props) {
         setSignupData({ ...signupData, [name]: value });
     };
 
-    // const findUser = async (username) => {
-    //     let searchResult = await (DS.getUserByUsername(username)).then((response) => {
-    //         console.log('response');
-    //         console.log(response);
-    //         return response.data;
-    //     });
-    //     console.log('searchResult');
-    //     console.log(searchResult);
-    //     setUserSearchResult(searchResult);
-    //     //return userSearchResult;
-    // }
-
     const submitSignup = async (event) => {
         event.preventDefault();
         console.log('signing up new user...');
@@ -85,20 +73,6 @@ function SignupForm(props) {
         console.log(signupData);
         // functionality added to validate data and create new user
         console.log(`calling addUser with signupData: ${JSON.stringify(signupData)}`);
-
-        // let userSearchResult = await (DS.getUserByUsername(signupData.username));//.then((response) => {
-        //     console.log('response');
-        //     console.log(response);
-        //     return response.data;
-        // });
-        // console.log('userSearchResult');
-        // console.log(userSearchResult);
-
-        // await findUser(signupData.username);
-        // console.log('userSearchResult');
-        // console.log(userSearchResult);
-        //console.log('userFound');
-        //console.log(userFound);
 
         let searchResult = await (DS.getUserByUsername(signupData.username)).then((response) => {
             console.log('response');

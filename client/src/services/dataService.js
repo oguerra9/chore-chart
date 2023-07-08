@@ -44,17 +44,16 @@ class DataService {
     // called when a new calendar is created
     // calendarData = { title, display_name, color_code, user_id }
     async addCalendar(calendarData) {
-        await fetch(`${BASE_URL}add_calender_`, {
+        await fetch(`${BASE_URL}add_calendar_`, {
             method: 'POST',
             headers: {
-                'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                "title": calendarData.title,
-                "display_name": calendarData.display_name,
-                "color_code": calendarData.color_code,
-                "user_id": calendarData.color_code
+                title: calendarData.title,
+                display_name: calendarData.display_name,
+                color_code: calendarData.color_code,
+                user_id: calendarData.user_id
             }),
         }).then((response) => {
             console.log(`add calendar response:`);
@@ -65,16 +64,16 @@ class DataService {
     // called when a user joins an existing calendar
     // joinData = { share_id, user_id, display_name, color_code }
     async joinCalendar(joinData) {
-        await fetch(`${BASE_URL}add_calender_user`, {
+        await fetch(`${BASE_URL}add_calendar_user`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                "share_id": joinData.calendar_id,
-                "display_name": joinData.display_name,
-                "color_code": joinData.color_code,
-                "user_id": joinData.user_id
+                share_id: joinData.calendar_id,
+                display_name: joinData.display_name,
+                color_code: joinData.color_code,
+                user_id: joinData.user_id
             }),
         }).then((response) => {
             console.log('join calendar response:');
@@ -95,7 +94,7 @@ class DataService {
             body: JSON.stringify({
                 title: choreData.chore_title,
                 calendar_id: choreData.calendar_id,
-                description: choreData.choreDescription,
+                description: choreData.description,
                 start_date: choreData.start_date,
                 end_date: choreData.end_date,
                 first_user_idx: choreData.first_user_idx,
@@ -107,18 +106,6 @@ class DataService {
         }).then((response) => {
             console.log(`add chore response`);
             console.log(response);
-            console.log( JSON.stringify({
-                title: choreData.chore_title,
-                calendar_id: choreData.calendar_id,
-                description: choreData.choreDescription,
-                start_date: choreData.start_date,
-                end_date: choreData.end_date,
-                first_user_idx: choreData.first_user_idx,
-                freq: choreData.freq,
-                time_inc: choreData.time_inc,
-                time_frame: choreData.time_frame,
-                does_repeat: choreData.does_repeat
-            }))
         });
     }
 
@@ -224,7 +211,7 @@ class DataService {
             body: JSON.stringify({
                 calendar_id: choreData.calendar_id.toString(),
                 chore_id: choreData.chore_id.toString(),
-                description: choreData.chore_description,
+                description: choreData.description,
                 start_date: choreData.start_date.toString(),
                 end_date: choreData.end_date.toString(),
                 first_usr_idx: parseInt(choreData.first_user_idx),
@@ -239,7 +226,7 @@ class DataService {
                 console.log(JSON.stringify({
                     calendar_id: choreData.calendar_id.toString(),
                     chore_id: choreData.chore_id.toString(),
-                    description: choreData.chore_description,
+                    description: choreData.description,
                     start_date: choreData.start_date,
                     end_date: choreData.end_date,
                     first_usr_idx: parseInt(choreData.first_usr_idx),
