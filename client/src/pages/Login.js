@@ -103,9 +103,17 @@ function SignupForm(props) {
                 let currTS = currTime.getTime();
                 localStorage.setItem('displayTS', currTS);
                 localStorage.setItem('loggedIn', true);
-                props.handleLogin();
-                window.location.pathname = '/';
+                
+                
             });
+            await (DS.getUserByUsername(signupData.username)).then((response) => {
+                console.log('response');
+                console.log(response);
+                return response.data;
+            });
+            
+            props.handleLogin();
+            window.location.pathname = '/';
         }
         //props.handleHideSignup();
         
