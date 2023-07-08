@@ -84,7 +84,7 @@ export default function CalendarSettings(props) {
         <Form id="appForm">
             <Form.Group>
                 <Form.Label>Title</Form.Label>
-                <Form.Control 
+                <Form.Control
                     name='title'
                     value={formData.title}
                     onChange={handleChange}
@@ -97,12 +97,11 @@ export default function CalendarSettings(props) {
                         <div className='d-flex mb-2' key={user.id}>
                             {console.log(user)}
                             <div style={{'color': user.color_code}} className="m-2 mb-0 d-flex align-self-center" key={user}>{user.display_name}</div>
-                            {userCalId == user.cl_usr_id ? (
+                            {/* {userCalId == user.cl_usr_id ? (
                                 <Button onClick={editUser} name={JSON.stringify(user)} id="editButton">🔧</Button>
                             ) : (
                                 <></>
-                            )}
-                            {/* <Button onClick={editUser} name={JSON.stringify(user)} id="editButton">🔧</Button> */}
+                            )} */}
                         </div>
                     ))}
                 </div>
@@ -139,12 +138,12 @@ export default function CalendarSettings(props) {
                 Edit Chore
             </Modal.Header>
             <Modal.Body>
-                <EditChoreForm 
-                    choreData={editChoreData} 
-                    calendarUsers={formData.users} 
-                    handleHideEditChore={handleHideEditChore} 
+                <EditChoreForm
+                    choreData={editChoreData}
+                    calendarUsers={formData.users}
+                    handleHideEditChore={handleHideEditChore}
                     toggleRefresh={props.toggleRefresh}
-                    handleHideCalendarSettings={props.handleHideCalendarSettings} 
+                    handleHideCalendarSettings={props.handleHideCalendarSettings}
                 />
             </Modal.Body>
         </Modal>
