@@ -226,13 +226,13 @@ Form  Button {
 }
 
 #monthContainer {
-  border: 1px solid var(--darkAccent);
+  border: 3px solid var(--darkAccent);
   border-radius: 10px;
   display: flex;
 }
 
 #weekDayTitles {
-  border: 1px solid red;
+  border: 1px solid var(--bgColor);
   column-count: 7;
   display: flex;
   width: 100%;
@@ -241,11 +241,12 @@ Form  Button {
 
 #dayTitle {
   width: 100%;
+  border: 1px solid var(--bgColor);
 }
 
 #datesContainer {
   width: 100%;
-  border: 1px solid pink;
+  border: 1px solid var(--bgColor);
   column-count: 7;
   display: flex;
   flex-wrap: wrap;
@@ -254,8 +255,9 @@ Form  Button {
 
 #dayBox { 
   height: 150px;
-  /* border: 1px solid green; */
+  border: 1px solid var(--bgColor); 
   width: 14.285714285714285714%;
+
 }
 
 #copyButton {

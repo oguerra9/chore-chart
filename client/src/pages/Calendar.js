@@ -87,7 +87,7 @@ export default function Calendar(props) {
             <div className='p-2' id="calendarPageContainer">
                 <div className='d-flex'>
                     <Link to="/home" className="m-2"><Button id='backButton'>{'<'}</Button></Link>
-                    <div className="m-2" style={{'marginRight': 'auto'}} id="headText">{calendarTitle}</div>
+                    <div className="m-2" style={{'marginRight': 'auto','fontSize':'28px'}} id="headText">{calendarTitle}</div>
                     <Button onClick={handleShowChoreForm} id="newChoreButton" className="col-2">Add New Chore</Button>
                     <Button onClick={handleShowCalendarSettings} className="m-2" id="settingsButton">⚙️</Button>
                 </div>
@@ -95,7 +95,7 @@ export default function Calendar(props) {
                 {loading ? (
                     <></>
                 ) : (
-                    <Month scheduledChores={calendarData.chores} userArr={calendarData.users} />
+                    <Month scheduledChores={calendarData.chores} userArr={calendarData.users} displayId={displayId} refresh={refresh} />
                 )}
             </div>
             

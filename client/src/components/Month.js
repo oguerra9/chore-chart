@@ -8,6 +8,7 @@ import Container from 'react-bootstrap/Container';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Card from 'react-bootstrap/Card';
+import DS from '../services/dataService';
 
 
 // props = scheduledChores, userArr
@@ -15,17 +16,38 @@ export default function Month(props) {
     const [displayTS, setDisplayTS] = useState(parseInt(localStorage.getItem('displayTS')));
     //const [dateArr, setDateArr] = useState([]);
     const [monthDays, setMonthDays] = useState([]);
+    const [calendarData, setCalendarData] = useState([]);
+    const [monthList, setMonthList] = useState([]);
     const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const [loading, setLoading] = useState(false);
     
-    useEffect(() => {
+    useEffect(async () => {
         // if (localStorage.hasOwnProperty('displayTS')) {
         //     setDisplayTS(localStorage.getItem('displayTS'));
         // }
 
         let dateArr = getDates();
         let monthArr = getMonthDays(dateArr);
-        sortChores(monthArr);
-    }, [displayTS]);
+        //setMonthList(monthArr);
+        await retrieveCalendarData(monthArr);
+        //sortChores(monthArr);
+        //sortChores(monthArr);
+    }, [displayTS, props.refresh]);
+
+    const retrieveCalendarData = async (monthArr) => {
+        setLoading(true);
+        let retrievedData = await (DS.getCalendarData(props.displayId)).then((response) => {
+            console.log(`calendar data response`);
+            console.log(response.data);
+            return response.data;
+        });
+
+        console.log('retrievedData');
+        console.log(retrievedData);
+        setCalendarData(retrievedData);
+        setLoading(false);
+        sortChores(monthArr, retrievedData);
+    };
 
     const handleChangeDate = (newTS) => {
         setDisplayTS(newTS);
@@ -80,9 +102,11 @@ export default function Month(props) {
     },
     */
 
-    const sortChores = (monthArr) => {
-        let choreArr = props.scheduledChores;
-        let users = props.userArr;
+    const sortChores = (monthArr, retrievedData) => {
+        //let choreArr = props.scheduledChores;
+        let choreArr = retrievedData.chores;
+        //let users = props.userArr;
+        let users = retrievedData.users;
         for (let i = 0; i < choreArr.length; i++) {
             let chore = choreArr[i];
             monthArr.forEach((day) => {

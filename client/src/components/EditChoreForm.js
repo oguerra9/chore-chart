@@ -236,6 +236,7 @@ export default function NewChoreForm(props) {
                         style={{'width':'45%'}}
                     >
                         <Form.Select aria-label="Time Frame">
+                            <option default value={originalData.time_frame}>{originalData.time_frame}</option>
                             <option value="week">Weeks</option>
                             <option value="day">Days</option>
                         </Form.Select>
