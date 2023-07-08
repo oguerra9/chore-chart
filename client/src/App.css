@@ -257,3 +257,12 @@ Form  Button {
   /* border: 1px solid green; */
   width: 14.285714285714285714%;
 }
+
+#copyButton {
+  background-color: lightslategray;
+  /* margin: 1%;
+  display: flex;
+  align-self: center;
+  padding: 1px; */
+  border: 1px solid lightslategray;
+}

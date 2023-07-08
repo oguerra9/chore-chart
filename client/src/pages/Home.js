@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
+import InputGroup from 'react-bootstrap/InputGroup';
 import { SliderPicker } from 'react-color';
 
 import Calendar from './Calendar';
@@ -11,31 +12,12 @@ import DateBar from '../components/DateBar';
 import { Link } from "react-router-dom";
 import DS from '../services/dataService';
 
-/* CURRENT DATASERVICE METHODS
-  ADD METHODS
-    addUser({ string username, string password})
-    addCalendar({ string title, string display_name, string color_code, string user_id })
-    joinCalendar({ string share_id, string user_id, string display_name, string color_code })
-    addChore({ string calendar_id, string title, string description, string start_date, string end_date, int first_user_idx, int freq, string time_frame, int time_inc, bool does_repeat })
-  GET METHODS
-    getUserByUsername( string username )
-    getUserCalendars( string userId )
-    getCalendarData( string calendarId )
-  EDIT METHODS
-    editCalendar({ string calendarId, string title })
-    editUserDisplay({ string userId, string display_name, string color_code }) ** only userId is required
-    editChore({ string choreId, string description, string start_data, string time_frame })  ** only choreId is required
-  DELETE METHODS
-    deleteCalendarUser({ string user_id, string calendar_id })
-    deleteChore( string choreId )
-    deleteCalendar( string calendar_id )
-*/
-
 export default function Home(props) {
 
     const [calendars, setCalendars] = useState([]);
     const [showNewCalendar, setShowNewCalendar] = useState(false);
     const [showJoinCalendar, setShowJoinCalendar] = useState(false);
+    const [refresh, setRefresh] = useState(true);
 
     const handleShowNewCalendar = () => setShowNewCalendar(true);
     const handleHideNewCalendar = () => setShowNewCalendar(false);
@@ -43,9 +25,17 @@ export default function Home(props) {
     const handleShowJoinCalendar = () => setShowJoinCalendar(true);
     const handleHideJoinCalendar = () => setShowJoinCalendar(false);
 
+    const toggleRefresh = () => {
+        if (refresh === true) {
+            setRefresh(false);
+        } else {
+            setRefresh(true);
+        }
+    }
+
     useEffect(async () => {
         await getCalendarList();
-    }, []);
+    }, [refresh]);
 
     const getCalendarList = async () => {
         // getUserCalendars( userId )
@@ -90,7 +80,7 @@ export default function Home(props) {
                     <Modal.Title>Create New Calendar</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <NewCalendarForm />
+                    <NewCalendarForm toggleRefresh={toggleRefresh} handleHideNewCalendar={handleHideNewCalendar} />
                 </Modal.Body>
             </Modal>
 
@@ -99,14 +89,14 @@ export default function Home(props) {
                     <Modal.Title>Join Existing Calendar</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <JoinCalendarForm />
+                    <JoinCalendarForm toggleRefresh={toggleRefresh} handleHideJoinCalendar={handleHideJoinCalendar} />
                 </Modal.Body>
             </Modal>
         </>
     );
 }
 
-function NewCalendarForm() {
+function NewCalendarForm(props) {
     const [created, setCreated] = useState(false);
     const [shareId, setShareId] = useState('');
     const [currUserId, setCurrUserId] = useState(localStorage.getItem('currUserId'));
@@ -143,24 +133,43 @@ function NewCalendarForm() {
        //setNewCalendarData({...newCalendarData, user_id: currUserId, color_code: sketchPickerColor});
        console.log(newCalendarData);
 
-        (DS.addCalendar(newCalendarData)).then((response) => {
+        (DS.addCalendar(newCalendarData)).then((data) => {
             console.log('adding calendar...');
-            console.log(response);
+            console.log(data);
+            setShareId(data.data[0].share_id)
         });
 
-        setShareId('calendarId');
-        console.log('creating new calendar...');
-        console.log(newCalendarData);
         //handleShowShareId();
         setCreated(true);
+        
     };
+
+    const handleDone = () => {
+        props.handleHideNewCalendar();
+        props.toggleRefresh();
+    }
 
     return (
         <>
             {created ? (
                 <div>
-                    <h3>{shareId}</h3>
-                    <p>Share this id with other users so they can join this calendar</p>
+                    <InputGroup className="mb-3">
+                        <Button onClick={() => {navigator.clipboard.writeText(shareId)}} id="copyButton">📋</Button>
+                        <Form.Control
+                            value={shareId}
+                            style={{'fontSize':'18px'}}
+                            disabled
+                        />
+                    </InputGroup>
+                    <Form.Label htmlFor="basic-url"><p>Share this id with other users so they can join this calendar</p></Form.Label>
+                    <Button onClick={handleDone} id="appButton">Done</Button>
+
+                    {/* <div className='d-flex'>
+                        <h3>{shareId}</h3>
+                        
+                    </div> */}
+                    {/* <p>Share this id with other users so they can join this calendar</p>
+                    <Button onClick={handleDone}>Done</Button> */}
                 </div>
             ) : (
                 <Form style={{'color':sketchPickerColor}} id="appForm">
@@ -200,7 +209,7 @@ function NewCalendarForm() {
 }
 
 // joinCalendar({ share_id, user_id, display_name, color_code })
-function JoinCalendarForm() {
+function JoinCalendarForm(props) {
     const [joinData, setJoinData] = useState({
         calendar_id: '',
         display_name: '',
@@ -214,7 +223,7 @@ function JoinCalendarForm() {
         setJoinData({...joinData, [name]: value});
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         console.log(joinData);
         // add functionality to add user to calendar with id = joinData.calendar_id and add calendar id to user's calendars arr
         // add to calendar.users array:
@@ -230,7 +239,10 @@ function JoinCalendarForm() {
        console.log('joining calendar...');
        console.log(joinData);
        joinData['user_id'] = localStorage.getItem('currUserId');
-       (DS.joinCalendar(joinData));
+       await (DS.joinCalendar(joinData));
+       props.handleHideJoinCalendar();
+       props.toggleRefresh();
+
     };
 
     return (
@@ -239,8 +251,8 @@ function JoinCalendarForm() {
                 <Form.Label>Calendar ID</Form.Label>
                 <Form.Control 
                     type="text"
-                    name="calendar_id"
-                    value={joinData.calendar_id}
+                    name="share_id"
+                    value={joinData.share_id}
                     onChange={handleChange}
                 />
             </Form.Group>

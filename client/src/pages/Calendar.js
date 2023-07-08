@@ -12,26 +12,6 @@ import { Link, useParams } from "react-router-dom";
 import DS from '../services/dataService';
 
 
-/* CURRENT DATASERVICE METHODS
-  ADD METHODS
-    addUser({ string username, string password})
-    addCalendar({ string title, string display_name, string color_code, string user_id })
-    joinCalendar({ string share_id, string user_id, string display_name, string color_code })
-    addChore({ string calendar_id, string title, string description, string start_date, string end_date, int first_user_idx, int freq, string time_frame, int time_inc, bool does_repeat })
-  GET METHODS
-    getUserByUsername( string username )
-    getUserCalendars( string userId )
-    getCalendarData( string calendarId )
-  EDIT METHODS
-    editCalendar({ string calendarId, string title })
-    editUserDisplay({ string userId, string display_name, string color_code }) ** only userId is required
-    editChore({ string choreId, string description, string start_data, string time_frame })  ** only choreId is required
-  DELETE METHODS
-    deleteCalendarUser({ string user_id, string calendar_id })
-    deleteChore( string choreId )
-    deleteCalendar( string calendar_id )
-*/
-
 // props: handlePageChange(pageName), calendarData
 export default function Calendar(props) {
     // can use Holidays by API-Ninja to add holidays etc to calendar for extra * pizazz *
@@ -40,20 +20,7 @@ export default function Calendar(props) {
     const [displayId, setDisplayId] = useState(useParams().id);
     const [calendarArr, setCalendarArr] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [refreshCount, setRefreshCount] = useState(0);
-
-
-    // const getCalendarData = () => {
-    //     // will be replaced with call to db to retrieve data for calendar with displayId
-    //     let retData = {};
-    //     for (let i = 0; i < calendarArr.length; i++) {
-    //         if (calendarArr[i].id === displayId) {
-    //             retData = calendarArr[i];
-    //             break;
-    //         }
-    //     }
-    //     return retData;
-    // };
+    const [refresh, setRefresh] = useState(0);
 
     const [calendarData, setCalendarData] = useState([]);
     const [calendarTitle, setCalendarTitle] = useState(localStorage.getItem('currCalendarTitle'));
@@ -69,6 +36,14 @@ export default function Calendar(props) {
     const handleShowCalendarSettings = () => setShowCalendarSettings(true);
     const handleHideCalendarSettings = () => setShowCalendarSettings(false);
 
+    const toggleRefresh = () => {
+        if (refresh === true) {
+            setRefresh(false);
+        } else {
+            setRefresh(true);
+        }
+    }
+
     useEffect(async () => {
 
         if (localStorage.hasOwnProperty('displayTS')) {
@@ -80,9 +55,8 @@ export default function Calendar(props) {
         }
 
         await retrieveCalendarData();
-        console.log('');
         // setCalendarData(getCalendarData());
-    }, []);
+    }, [refresh]);
     //}, [refreshCount]);
 
     const retrieveCalendarData = async () => {
@@ -98,14 +72,15 @@ export default function Calendar(props) {
         setLoading(false);
     }
 
-    const handleChangeData = async () => {
-        //setCalendarData(newCalendarData);
-        console.log('data change');
-        await retrieveCalendarData();
-        setRefreshCount(refreshCount + 1);
-        handleHideCalendarSettings();
-        window.location.pathname = window.location.pathname;
-    };
+    // const handleChangeData = async () => {
+    //     //setCalendarData(newCalendarData);
+    //     console.log('data change');
+    //     //await retrieveCalendarData();
+    //     //setRefreshCount(refreshCount + 1);
+    //     //setLoading(true);
+    //     handleHideCalendarSettings();
+    //     //window.location.pathname = window.location.pathname;
+    // };
 
     return (
         <>
@@ -130,7 +105,11 @@ export default function Calendar(props) {
                     <Modal.Title>Add New Chore</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <NewChoreForm calendarUsers={calendarData.users} handleHideChoreForm={handleHideChoreForm} handleChangeData={handleChangeData} />
+                    <NewChoreForm 
+                        calendarUsers={calendarData.users} 
+                        handleHideChoreForm={handleHideChoreForm} 
+                        toggleRefresh={toggleRefresh} 
+                    />
                 </Modal.Body>
             </Modal>
 
@@ -139,7 +118,12 @@ export default function Calendar(props) {
                     <Offcanvas.Title>Calendar Settings</Offcanvas.Title>
                 </Offcanvas.Header>
                 <Offcanvas.Body>
-                    <CalendarSettings calendarData={{...calendarData, calendar_id: displayId, title: calendarTitle}} handleChangeData={handleChangeData} />
+                    <CalendarSettings 
+                        calendarData={{...calendarData, calendar_id: displayId, title: calendarTitle}} 
+                        handleHideCalendarSettings={handleHideCalendarSettings} 
+                        toggleRefresh={toggleRefresh} 
+                        setCalendarTitle={setCalendarTitle}
+                    />
                 </Offcanvas.Body>
             </Offcanvas>
         </>

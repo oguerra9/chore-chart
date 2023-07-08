@@ -95,30 +95,20 @@ function SignupForm(props) {
             await (DS.addUser(signupData)).then((response) => {
                 console.log('adding user...');
                 console.log(response);
-                console.log('response body');
-                console.log(response.body.user_id);
-                if (response.status === 200) {
-                    localStorage.setItem('currUserId', response.user_id);
-                    props.handleHideSignup();
-                } else {
-                    setShowSUAlert(true);
-                }
+                
+                // if (response.status === 200) {
+                localStorage.setItem('currUserId', response.data[0].user_id)
+                props.handleHideSignup();
+                let currTime = new Date();
+                let currTS = currTime.getTime();
+                localStorage.setItem('displayTS', currTS);
+                localStorage.setItem('loggedIn', true);
+                props.handleLogin();
+                window.location.pathname = '/';
             });
         }
-
-        searchResult = await (DS.getUserByUsername(signupData.username)).then((response) => {
-            console.log('response');
-            console.log(response);
-            localStorage.setItem('currUserId', response.data[0].user_id)
-            return response.data;
-        });
-
         //props.handleHideSignup();
-        let currTime = new Date();
-        let currTS = currTime.getTime();
-        localStorage.setItem('displayTS', currTS);
-        localStorage.setItem('loggedIn', true);
-        window.location.pathname = '/';
+        
     };
 
     return (
@@ -178,7 +168,7 @@ function LoginForm(props) {
         (DS.getUserByUsername(loginData.username)).then((response) => {
             console.log(`response from looking for user ${loginData.username}:`);
             console.log(response);
-            if (response.length === 0) {    // user is not found
+            if (response.data.length === 0) {    // user is not found
                 setShowDNE(true);
             } else {
                 let userDocData = response.data[0];

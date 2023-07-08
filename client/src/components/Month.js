@@ -93,7 +93,7 @@ export default function Month(props) {
                         day.chores.push(displayChore);
                     } 
                 } else {
-                    if ((day.timelessStamp >= chore.start_date) && ((chore.end_date === '') || (chore.end_date != '' && day.timelessStamp <= chore.end_date))) {
+                    if ((day.timelessStamp >= chore.start_date) && ((chore.end_date === '') || ((chore.end_date != '') && day.timelessStamp <= chore.end_date))) {
                         let timeDiff = Math.abs(day.timelessStamp - chore.start_date);
                         if (timeDiff % chore.time_inc === 0 || timeDiff % chore.time_inc === 3600000) {
                             if (timeDiff % chore.time_inc === 3600000) {
@@ -161,7 +161,7 @@ export default function Month(props) {
                                     <div className='mb-1'>{new Date(date).getDate()}</div>
                                     <div>
                                         {chores.map((chore) => (
-                                            <div className='d-flex' key={chore.chore_title}>
+                                            <div className='d-flex' key={chore.title}>
                                                 <div style={{'color': chore.user.color_code, 'textDecoration':'underline'}}>
                                                     {chore.user.display_name} - {chore.chore_title}
                                                 </div>
