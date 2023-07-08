@@ -19,6 +19,9 @@ export default function App() {
 
   const handleLogout = () => {
     localStorage.setItem('loggedIn', false);
+    localStorage.removeItem('currUserId');
+    localStorage.removeItem('currCalendarTitle');
+    localStorage.removeItem('userCalId');
     setLoggedIn('false');
   }
 
