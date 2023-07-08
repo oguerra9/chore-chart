@@ -15,7 +15,7 @@ export default function App() {
 
   const handleLogin = () => {
     setLoggedIn('true');
-    window.location.pathname = '/';
+    //window.location.pathname = '/';
   };
 
 
@@ -39,7 +39,7 @@ export default function App() {
     if (localStorage.hasOwnProperty('loggedIn')) {
       setLoggedIn(localStorage.getItem('loggedIn'));
     }
-  }, [loggedIn, mainRefresh]);
+  }, [mainRefresh]);
 
   return (
     <div id="fullAppContainer">
