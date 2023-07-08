@@ -47,24 +47,11 @@ export default function NewChoreForm(props) {
     // console.log(props.calendarUsers);
 
     const [repeating, setRepeating] = useState(false);
-    const [choreIcon, setChoreIcon] = useState('');
     const [calendarId, setCalendarId] = useState(useParams().id);
-    const iconOptions = ['🪠','🚽','🧻','🪣','🚿','🛁','🧼','🫧','🧽','🧴','🧹','🧺','💧','💦','☢️','⚠️','♻️','🗑️','🚻','🪥'];
 
     // addChore({ calendar_id, title, description, start_date, end_date, first_user_idx, freq, time_frame, time_inc, does_repeat })
 
-    const [newChoreData, setNewChoreData] = useState({
-        calendar_id: '',
-        chore_title: '',
-        description: '',
-        start_date: '',
-        end_date: '',
-        first_user_idx: '',
-        freq: '',
-        time_frame: '',
-        time_inc: '',
-        does_repeat: ''
-    });
+    const [newChoreData, setNewChoreData] = useState({});
 
     const handleChange = (event) => {
         const {name, value} = event.target;
@@ -105,9 +92,9 @@ export default function NewChoreForm(props) {
     
         } else {
             newChoreData.end_date = startTS;
-            newChoreData.freq = '';
-            newChoreData.time_frame = '';
-            newChoreData.time_inc = '';
+            // newChoreData.freq = '';
+            // newChoreData.time_frame = '';
+            // newChoreData.time_inc = '';
 
         }
         
@@ -117,15 +104,21 @@ export default function NewChoreForm(props) {
         console.log(`adding chore with data:`);
         console.log(newChoreData);
         newChoreData.calendar_id = calendarId;
-        newChoreData.does_repeat = newChoreData.does_repeat.toString();
-        newChoreData.first_user_idx = newChoreData.first_user_idx.toString();
-        newChoreData.time_inc = newChoreData.time_inc.toString();
-        newChoreData.freq = newChoreData.freq.toString();
+        
+        let propertyNames = Object.getOwnPropertyNames(newChoreData);
+        console.log(propertyNames);
+        for (let i = 0; i < propertyNames.length; i++) {
+            let propertyName = propertyNames[i];
+            newChoreData[propertyName] = newChoreData[propertyName].toString();
+        }
+        propertyNames.forEach((property) => {
+            newChoreData[property] = newChoreData[property].toString();
+        })
         // addChore({ string calendar_id, string title, string description, string start_date, string end_date, int first_user_idx, int freq, string time_frame, int time_inc, bool does_repeat })
-        (DS.addChore(newChoreData)).then((response) => {
-            console.log('adding chore...');
-            console.log(response);
-        });
+        // (DS.addChore(newChoreData)).then((response) => {
+        //     console.log('adding chore...');
+        //     console.log(response);
+        // });
 
         props.handleHideChoreForm();
         props.handleChangeData();

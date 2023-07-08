@@ -18,7 +18,7 @@
     deleteCalendar( string calendar_id )
 */
 
-const BASE_URL = "http://34.148.183.141:8111/";
+const BASE_URL = "https://34.148.183.141:8111/";
 
 class DataService {
     /*                      ADD METHODS                     */
@@ -91,18 +91,7 @@ class DataService {
             headers: {
               'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-                title: choreData.chore_title,
-                calendar_id: choreData.calendar_id,
-                description: choreData.description,
-                start_date: choreData.start_date,
-                end_date: choreData.end_date,
-                first_user_idx: choreData.first_user_idx,
-                freq: choreData.freq,
-                time_inc: choreData.time_inc,
-                time_frame: choreData.time_frame,
-                does_repeat: choreData.does_repeat
-            }),
+            body: JSON.stringify(choreData),
         }).then((response) => {
             console.log(`add chore response`);
             console.log(response);
@@ -185,11 +174,7 @@ class DataService {
             headers: {
               'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-                user_id: JSON.stringify(userDisplayData.cl_usr_id),
-                display_name: JSON.stringify(userDisplayData.user_id),
-                color_code: JSON.stringify(userDisplayData.color_code)
-            }),
+            body: JSON.stringify({userDisplayData}),
         })
             .then((response) => {
                 console.log('edit user display response:');
@@ -208,34 +193,9 @@ class DataService {
             headers: {
               'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-                calendar_id: choreData.calendar_id.toString(),
-                chore_id: choreData.chore_id.toString(),
-                description: choreData.description,
-                start_date: choreData.start_date.toString(),
-                end_date: choreData.end_date.toString(),
-                first_usr_idx: parseInt(choreData.first_user_idx),
-                freq: parseInt(choreData.freq),
-                time_frame: choreData.time_frame,
-                title: choreData.chore_title,
-                time_inc: parseInt(choreData.time_inc),
-                does_repeat: choreData.does_repeat
-            }),
+            body: JSON.stringify(choreData),
         })
             .then((response) => {
-                console.log(JSON.stringify({
-                    calendar_id: choreData.calendar_id.toString(),
-                    chore_id: choreData.chore_id.toString(),
-                    description: choreData.description,
-                    start_date: choreData.start_date,
-                    end_date: choreData.end_date,
-                    first_usr_idx: parseInt(choreData.first_usr_idx),
-                    freq: parseInt(choreData.freq),
-                    time_frame: choreData.time_frame,
-                    title: choreData.chore_title,
-                    time_inc: parseInt(choreData.time_inc),
-                    does_repeat: choreData.does_repeat
-                }));
                 console.log('edit chore response');
                 console.log(response);
             });
@@ -250,10 +210,7 @@ class DataService {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-                    user_id: ids.user_id,
-                    calendar_id: ids.calendar_id
-                }),
+            body: JSON.stringify(deleteCalendarUser),
         });
     }
     
