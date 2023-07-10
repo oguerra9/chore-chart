@@ -5,6 +5,7 @@ import Modal from 'react-bootstrap/Modal';
 
 import EditUserForm from './EditUserForm';
 import EditChoreForm from './EditChoreForm';
+import InputGroup from 'react-bootstrap/InputGroup';
 
 import DS from '../services/dataService';
 
@@ -15,8 +16,8 @@ export default function CalendarSettings(props) {
     */
 
     const [formData, setFormData] = useState(props.calendarData);
-    console.log(props.calendarData);
     const [userCalId, setUserCalId] = useState(localStorage.getItem('userCalId'));
+    const [shareId, setShareId] = useState(localStorage.getItem('shareId'));
     const [editUserData, setEditUserData] = useState({});
     const [editChoreData, setEditChoreData] = useState({});
 
@@ -35,8 +36,6 @@ export default function CalendarSettings(props) {
     };
 
     const handleSubmit = async () => {
-        console.log('updated calendar data');
-        console.log(formData);
         //editCalendar({ string calendarId, string title })
         await (DS.editCalendar({calendar_id: (formData['calendar_id']).toString(), title: (formData.title)})).then((response) => {
             console.log(`updated calendar`);
@@ -53,8 +52,6 @@ export default function CalendarSettings(props) {
     const editUser = (event) => {
         let userData = JSON.parse(event.target.name);
         setEditUserData(userData);
-        console.log('edit user');
-        console.log(userData);
         handleShowEditUser();
 
     };
@@ -62,8 +59,6 @@ export default function CalendarSettings(props) {
     const editChore = (event) => {
         let choreData = JSON.parse(event.target.name);
         setEditChoreData(choreData);
-        console.log('edit chore');
-        console.log(choreData);
         handleShowEditChore();
     };
 
@@ -95,7 +90,6 @@ export default function CalendarSettings(props) {
                 <div>
                     {formData.users.map((user) => (
                         <div className='d-flex mb-2' key={user.id}>
-                            {console.log(user)}
                             <div style={{'color': user.color_code}} className="m-2 mb-0 d-flex align-self-center" key={user}>{user.display_name}</div>
                             {/* {userCalId == user.cl_usr_id ? (
                                 <Button onClick={editUser} name={JSON.stringify(user)} id="editButton">🔧</Button>
@@ -119,7 +113,15 @@ export default function CalendarSettings(props) {
             </div>
             <div>
                 <h4>Share Id</h4>
-                <p>{formData.id}</p>
+                <InputGroup className="mb-3">
+                    <Button onClick={() => {navigator.clipboard.writeText(shareId)}} id="copyButton">📋</Button>
+                    <Form.Control
+                        value={shareId}
+                        style={{'fontSize':'14px'}}
+                        className="mb-0"
+                        disabled
+                    />
+                </InputGroup>
             </div>
             <Button id="appButton" onClick={handleSubmit}>Save Changes</Button>
         </Form>

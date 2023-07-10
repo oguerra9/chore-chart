@@ -268,3 +268,8 @@ Form  Button {
   padding: 1px; */
   border: 1px solid lightslategray;
 }
+
+#smallCopyButton {
+  background-color: lightslategray;
+  border: 1px solid lightslategray;
+}

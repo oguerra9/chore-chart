@@ -19,17 +19,11 @@ export default function EditUserForm(props) {
         setUserData({...userData, color_code: sketchPickerColor});
         userData.user_id = localStorage.getItem('currUserId');
         userData.calendar_id = userData.calendar_id.toString();
-        //userData.cl_usr_id = userData.cl_usr_id.toString();
         delete userData.cl_usr_id;
         delete userData.calendar_id;
         userData.user_id = userData.cl_usr_id;
-        // add functionality to update user in db
-        console.log('updated user data:');
-        console.log(userData);
-
         userData['color_code'] = sketchPickerColor;
 
-        //editUserDisplay({ string userId, string display_name, string color_code }) ** only userId is required
         await (DS.editUserDisplay(userData)).then((response) => {
             console.log('editting user display');
             console.log(response);

@@ -34,27 +34,24 @@ export default function Home(props) {
     }
 
     useEffect(async () => {
-        console.log('home page use effect');
         await getCalendarList();
     }, [refresh]);
 
     const getCalendarList = async () => {
-        // getUserCalendars( userId )
         let myCalendars = await (DS.getUserCalendars(localStorage.getItem('currUserId'))).then((response) => {
-            console.log(`retrieving calendar list for user with id ${localStorage.getItem('currUserId')}`);
             console.log('calendar list response:');
             console.log(response.data);
-            //setCalendars(response);
             return response.data;
         });
         setCalendars(myCalendars);
     };
 
     const directCalendar = (event) => {
-        console.log(`redirecting to calendar with id ${event.target.name}`);
+        let data = JSON.parse(event.target.value);
         localStorage.setItem('displayTS', (new Date().getTime()));
-        localStorage.setItem('currCalendarTitle', event.target.name);
-        localStorage.setItem('userCalId', event.target.value);
+        localStorage.setItem('currCalendarTitle', data.title);
+        localStorage.setItem('userCalId', data.cl_usr_id);
+        localStorage.setItem('shareId', data.share_id);
     };
 
     return (
@@ -70,7 +67,7 @@ export default function Home(props) {
                 {/* <Button onClick={combinedCalendar}>See all</Button> */}
                 {calendars.map(calendar => (
                     <Link to={`/calendar/${calendar.calendar_id}`} key={calendar.calendar_id} className='col-2 m-2 d-flex flex-column'>
-                        <Button onClick={directCalendar}  name={calendar.title} value={calendar.cl_usr_id} id="calendarButton">{calendar.title}</Button>
+                        <Button onClick={directCalendar}  name={calendar.title} value={JSON.stringify(calendar)} id="calendarButton">{calendar.title}</Button>
                     </Link>
                 ))}
             </div>
@@ -127,16 +124,10 @@ function NewCalendarForm(props) {
                 title: 'calendar title'
             }
         */
-       console.log(currUserId);
-       console.log(sketchPickerColor);
        newCalendarData.user_id = currUserId;
        newCalendarData.color_code = sketchPickerColor; 
-       //setNewCalendarData({...newCalendarData, user_id: currUserId, color_code: sketchPickerColor});
-       console.log(newCalendarData);
 
         (DS.addCalendar(newCalendarData)).then((data) => {
-            console.log('adding calendar...');
-            console.log(data);
             setShareId(data.data[0].share_id)
         });
 

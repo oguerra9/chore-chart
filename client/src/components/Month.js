@@ -103,15 +103,16 @@ export default function Month(props) {
     */
 
     const sortChores = (monthArr, retrievedData) => {
-        //let choreArr = props.scheduledChores;
         let choreArr = retrievedData.chores;
-        //let users = props.userArr;
         let users = retrievedData.users;
         for (let i = 0; i < choreArr.length; i++) {
             let chore = choreArr[i];
+            if (chore.end_date === 'NaN' || chore.end_date === null || chore.end_date === 'null') {
+                chore.end_date = '';
+            }
             monthArr.forEach((day) => {
                 if (chore.does_repeat === false) {
-                    if (chore.start_date === day.timelessStamp) {
+                    if (parseInt(chore.start_date) === day.timelessStamp) {
                         let displayChore = {...chore};
                         displayChore.user = users[chore.first_user_idx];
                         day.chores.push(displayChore);

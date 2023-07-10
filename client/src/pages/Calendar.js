@@ -72,16 +72,6 @@ export default function Calendar(props) {
         setLoading(false);
     }
 
-    // const handleChangeData = async () => {
-    //     //setCalendarData(newCalendarData);
-    //     console.log('data change');
-    //     //await retrieveCalendarData();
-    //     //setRefreshCount(refreshCount + 1);
-    //     //setLoading(true);
-    //     handleHideCalendarSettings();
-    //     //window.location.pathname = window.location.pathname;
-    // };
-
     return (
         <>
             <div className='p-2' id="calendarPageContainer">

@@ -9,7 +9,6 @@ import DS from '../services/dataService';
 // props = calendarUsers, choreData
 export default function NewChoreForm(props) {
 
-    //console.log(props.choreData);
     const [repeating, setRepeating] = useState(props.choreData.does_repeat);
     const [choreIcon, setChoreIcon] = useState('');
     const [calendarId, setCalendarId] = useState(useParams().id);
@@ -51,15 +50,12 @@ export default function NewChoreForm(props) {
         // assign to user
         newChoreData.does_repeat = repeating;
 
-        let startTS = new Date(startDate).getTimelessStamp();
+        let startTS = new Date(startDate).nextDay().getTimelessStamp();
         newChoreData.start_date = startTS.toString();
 
         if (repeating) {
-            console.log('repeating');
-            console.log(newChoreData.end_date);
-            let endTS = new Date(endDate).getTimelessStamp();
+            let endTS = new Date(endDate).nextDay().getTimelessStamp();
             newChoreData.end_date = endTS.toString();
-            console.log(`end_date = ${endTS}`);
             let frequency = 0;
             if (newChoreData.hasOwnProperty('freq')) {
                 frequency = parseInt(newChoreData.freq);
@@ -85,8 +81,6 @@ export default function NewChoreForm(props) {
         }
         
         setNewChoreData({...newChoreData, does_repeat: repeating });
-        console.log(`updating chore with data:`);
-        console.log(newChoreData);
 
         let sendData = {};
         let propertyNames = Object.getOwnPropertyNames(originalData);
@@ -99,46 +93,12 @@ export default function NewChoreForm(props) {
             }
         }
 
-        //delete sendData.calendar_id;
-        // sendData.calendar_id = sendData.calendar_id.toString();
-        // sendData.chore_id = sendData.chore_id.toString();
-        // sendData.does_repeat = sendData.does_repeat.toString();
-        // sendData.first_user_idx = sendData.first_user_idx.toString();
-        // sendData.freq = sendData.freq.toString();
-        // sendData.time_inc = sendData.time_inc.toString();
-
-        console.log(`originalData`);
-        console.log(originalData);
-        console.log('newChoreData');
-        console.log(newChoreData);
-        console.log('sendData');
-        console.log(sendData);
-        //sendData.id = sendData.chore_id;
-
-        // let diffData = {
-        //     //calendar_id: sendData.calendar_id,
-        //     chore_description: sendData.description,
-        //     chore_id: sendData.chore_id,
-        //     chore_title: sendData.title,
-        //     does_repeat: sendData.does_repeat,
-        //     end_date: sendData.end_date,
-        //     first_user_idx: sendData.first_user_idx,
-        //     freq: sendData.freq,
-        //     start_date: sendData.start_date,
-        //     time_frame: sendData.time_frame,
-        //     time_inc: sendData.time_inc
-        // };
 
         await (DS.editChore(sendData)).then((response) => {
             console.log(sendData);
             console.log('adding chore...');
             console.log(response);
         });
-        // await (DS.editChore(diffData)).then((response) => {
-        //     console.log(sendData);
-        //     console.log('adding chore...');
-        //     console.log(response);
-        // });
 
         props.handleHideEditChore();
         props.handleHideCalendarSettings();
@@ -184,9 +144,7 @@ export default function NewChoreForm(props) {
                     value={newChoreData.first_user_idx}
                     defaultValue={newChoreData.first_user_idx}
                     placeholder={originalData.first_user_idx}
-                    onChange={(e) => {
-                        console.log(e.target.value)
-                        setNewChoreData({ ...newChoreData, first_user_idx: e.target.value })}}
+                    onChange={(e) => {setNewChoreData({ ...newChoreData, first_user_idx: e.target.value })}}
                 >
                     <Form.Label>Assign first user:</Form.Label>
                     <Form.Select>

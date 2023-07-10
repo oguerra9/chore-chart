@@ -7,23 +7,6 @@ import DS from '../services/dataService';
 
 // props = calendarUsers
 export default function NewChoreForm(props) {
-    // will appear in modal with the following input areas:
-    //  (string) title
-    //  (checkbox) repeating
-    //      - when repeating clicked, new option for chore frequency
-
-    // let users = [
-    //     {
-    //         id:'0',
-    //         name:'Liv'
-    //     },
-    //     {
-    //         id:'1',
-    //         name:'Mia'
-    //     }
-    // ];
-
-    // console.log(props.calendarUsers);
 
     const [repeating, setRepeating] = useState(false);
     const [calendarId, setCalendarId] = useState(useParams().id);
@@ -44,18 +27,13 @@ export default function NewChoreForm(props) {
     };
 
     const submitChoreForm = async () => {
-        // add functionality to add chore to database
-        // get calendar id from local storage
-        // assign to user
         newChoreData.does_repeat = repeating;
 
-        let startTS = JSON.stringify(new Date(newChoreData.start_date).getTimelessStamp());
+        let startTS = JSON.stringify(new Date(newChoreData.start_date).nextDay().getTimelessStamp());
         newChoreData.start_date = startTS;
 
         if (repeating) {
-            console.log('repeating');
-            console.log(newChoreData.end_date);
-            let endTS = JSON.stringify(new Date(newChoreData.end_date).getTimelessStamp());
+            let endTS = JSON.stringify(new Date(newChoreData.end_date).nextDay().getTimelessStamp());
             newChoreData.end_date = endTS;
             newChoreData.freq = parseInt(newChoreData.freq);
             const ms_in_one_day = 86400000;
@@ -73,14 +51,9 @@ export default function NewChoreForm(props) {
 
         }
         
-
-        console.log(calendarId);
         setNewChoreData({...newChoreData, does_repeat: repeating, calendar_id: calendarId});
-        console.log(`adding chore with data:`);
-        console.log(newChoreData);
         newChoreData.calendar_id = calendarId;
 
-        console.log(newChoreData);
         await (DS.addChore(newChoreData)).then((response) => {
             console.log('adding chore...');
             console.log(response);

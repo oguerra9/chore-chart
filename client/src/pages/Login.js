@@ -68,11 +68,6 @@ function SignupForm(props) {
 
     const submitSignup = async (event) => {
         event.preventDefault();
-        console.log('signing up new user...');
-        console.log('Data:');
-        console.log(signupData);
-        // functionality added to validate data and create new user
-        console.log(`calling addUser with signupData: ${JSON.stringify(signupData)}`);
 
         let searchResult = await (DS.getUserByUsername(signupData.username)).then((response) => {
             console.log('response');
@@ -83,10 +78,10 @@ function SignupForm(props) {
         let uniqueUsername = true;
 
         if (searchResult.length === 0) {
-            console.log('username does not already exist');
+            // username does not already exist
             uniqueUsername = true;
         } else {
-            console.log('username already in use');
+            // username already in use
             setShowExistsAlert(true);
             uniqueUsername = false;
         }
@@ -96,7 +91,6 @@ function SignupForm(props) {
                 console.log('adding user...');
                 console.log(response);
                 
-                // if (response.status === 200) {
                 localStorage.setItem('currUserId', response.data[0].user_id)
                 props.handleHideSignup();
                 let currTime = new Date();
@@ -107,18 +101,7 @@ function SignupForm(props) {
                 
                 
             }).then(window.location.pathame='/');
-            // await (DS.getUserByUsername(signupData.username)).then((response) => {
-            //     console.log('response');
-            //     console.log(response);
-            //     localStorage.setItem('currUserId', response.data[0].user_id)
-            //     return response.data;
-            // });
-
-            //props.toggleMainRefresh();
-            //window.location.pathname = '/#/home';
-        }
-        //props.handleHideSignup();
-        
+        }        
     };
 
     return (
@@ -142,7 +125,6 @@ function SignupForm(props) {
     );
 }
 
-// props = handleHideLogin
 function LoginForm(props) {
 
     const [showDNE, setShowDNE] = useState(false);
@@ -171,23 +153,15 @@ function LoginForm(props) {
     const submitLogin = (event) => {
         event.preventDefault();
         console.log('Logging in...');
-        console.log('Data:');
-        console.log(loginData);
 
         // actual functionality will be something more like this once we know that endpoint has been established
         (DS.getUserByUsername(loginData.username)).then((response) => {
-            console.log(`response from looking for user ${loginData.username}:`);
-            console.log(response);
             if (response.data.length === 0) {    // user is not found
                 setShowDNE(true);
             } else {
                 let userDocData = response.data[0];
-                console.log('userDocData');
-                console.log(userDocData);
-                console.log(`loginData.password != userDocData.password`);
-                console.log(`${loginData.password} != ${userDocData.password}`);
-                console.log(loginData.password != userDocData.password);
                 if (loginData.password != userDocData.password) {
+                    // user's saved password does not match password entered in login attempt
                     setShowInvalidPass(true);
                 } else {
                     localStorage.setItem('currUserId', userDocData.user_id);
@@ -202,10 +176,6 @@ function LoginForm(props) {
                 }
             }
         });
-
-        
-        //props.handleLogin();
-        //localStorage.setItem('loggedIn', true);
     };
 
 
