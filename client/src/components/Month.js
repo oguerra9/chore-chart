@@ -14,7 +14,6 @@ import DS from '../services/dataService';
 // props = scheduledChores, userArr
 export default function Month(props) {
     const [displayTS, setDisplayTS] = useState(parseInt(localStorage.getItem('displayTS')));
-    //const [dateArr, setDateArr] = useState([]);
     const [monthDays, setMonthDays] = useState([]);
     const [calendarData, setCalendarData] = useState([]);
     const [monthList, setMonthList] = useState([]);
@@ -22,28 +21,17 @@ export default function Month(props) {
     const [loading, setLoading] = useState(false);
     
     useEffect(async () => {
-        // if (localStorage.hasOwnProperty('displayTS')) {
-        //     setDisplayTS(localStorage.getItem('displayTS'));
-        // }
-
         let dateArr = getDates();
         let monthArr = getMonthDays(dateArr);
-        //setMonthList(monthArr);
         await retrieveCalendarData(monthArr);
-        //sortChores(monthArr);
-        //sortChores(monthArr);
     }, [displayTS, props.refresh]);
 
     const retrieveCalendarData = async (monthArr) => {
         setLoading(true);
         let retrievedData = await (DS.getCalendarData(props.displayId)).then((response) => {
-            console.log(`calendar data response`);
-            console.log(response.data);
             return response.data;
         });
 
-        console.log('retrievedData');
-        console.log(retrievedData);
         setCalendarData(retrievedData);
         setLoading(false);
         sortChores(monthArr, retrievedData);
@@ -88,19 +76,6 @@ export default function Month(props) {
 
         return days;
     }
-
-    /*
-    {
-        chore_title: "Sweep Floors",
-        start_date: 1690171200000,
-        end_date: 1690516800000,
-        first_user_idx: "1",
-        time_frame: "week",
-        freq: "1",
-        does_repeat: true,
-        time_inc: 604800000,
-    },
-    */
 
     const sortChores = (monthArr, retrievedData) => {
         let choreArr = retrievedData.chores;

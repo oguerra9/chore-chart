@@ -213,7 +213,7 @@ Form  Button {
   border: 1px solid var(--buttons);
   text-shadow: 1px 1px #000000;
   border-radius: 53%;
-  padding: 4px 12px;
+  padding: 0px 9px;
   margin: 2px 0px;
   align-self: center;
 }
@@ -266,10 +266,5 @@ Form  Button {
   display: flex;
   align-self: center;
   padding: 1px; */
-  border: 1px solid lightslategray;
-}
-
-#smallCopyButton {
-  background-color: lightslategray;
   border: 1px solid lightslategray;
 }

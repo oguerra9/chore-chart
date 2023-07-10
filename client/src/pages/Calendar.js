@@ -75,11 +75,15 @@ export default function Calendar(props) {
     return (
         <>
             <div className='p-2' id="calendarPageContainer">
-                <div className='d-flex'>
-                    <Link to="/home" className="m-2"><Button id='backButton'>{'<'}</Button></Link>
-                    <div className="m-2" style={{'marginRight': 'auto','fontSize':'28px'}} id="headText">{calendarTitle}</div>
-                    <Button onClick={handleShowChoreForm} id="newChoreButton" className="col-2">Add New Chore</Button>
-                    <Button onClick={handleShowCalendarSettings} className="m-2" id="settingsButton">⚙️</Button>
+                <div className='d-flex justify-content-between'>
+                    <div className='d-flex col-6'>
+                        <Link to="/home" className="m-2 d-flex align-self-center pt-1"><Button id='backButton'>{'<'}</Button></Link>
+                        <div className="m-2" style={{'marginRight': 'auto','fontSize':'36px'}} id="headText">{calendarTitle}</div>
+                    </div>
+                    <div className='d-flex col-6 justify-content-end'>
+                        <Button onClick={handleShowChoreForm} id="newChoreButton" className="col-4">Add New Chore</Button>
+                        <Button onClick={handleShowCalendarSettings} className="m-2" id="settingsButton">⚙️</Button>
+                    </div>
                 </div>
                 
                 {loading ? (
